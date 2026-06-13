@@ -1,0 +1,10 @@
+{
+  "admin": {
+    "username": "admin",
+    "password": "123",
+    "pin": "1234",
+    "role": "admin",
+    "lastLogin": 1776500398093,
+    "status": "online"
+  }
+}

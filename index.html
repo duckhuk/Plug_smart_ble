@@ -1,0 +1,3693 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hệ thống quản lý thiết bị</title>
+  <link rel="icon" type="image/jpeg" href="assets/images/logo108.jpg" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    if (sessionStorage.getItem("ble_auth") !== "1") {
+      location.replace("/login.html");
+    }
+  </script>
+</head>
+
+<body>
+  <div class="layout">
+
+    <!-- ══════════ SIDEBAR ══════════ -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">
+          <img src="assets/images/logo108.jpg" alt="Logo" />
+        </div>
+        <div class="sidebar-logo-text">
+          <strong>Hệ thống quản lý</strong>
+          <span>Device Manager</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" onclick="switchPage('dashboard')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          Vị trí thiết bị
+        </button>
+
+        <button class="nav-item" onclick="switchPage('devices')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          Quản lý thiết bị
+        </button>
+        <div class="nav-group" id="menu-group-reports">
+          <button class="nav-item nav-parent" onclick="toggleNavGroup(this)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            Lịch sử &amp; Báo cáo
+            <svg class="nav-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              style="margin-left: auto; transition: none;">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="nav-submenu" style="display: none; flex-direction: column; padding-left: 24px; padding-top: 4px;">
+            <button class="nav-item nav-sub-item rpt-menu-btn active" data-target="export"
+              onclick="switchPage('reports', this); switchRptMenu('export')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Báo cáo dữ liệu
+            </button>
+            <button class="nav-item nav-sub-item rpt-menu-btn" data-target="tracking"
+              onclick="switchPage('reports', this); switchRptMenu('tracking')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                <line x1="8" y1="2" x2="8" y2="18"></line>
+                <line x1="16" y1="6" x2="16" y2="22"></line>
+              </svg>
+              Lịch sử di chuyển
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-item nav-parent" onclick="toggleNavGroup(this)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"></path>
+              <path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="m4.93 4.93 1.41 1.41"></path>
+              <path d="m17.66 17.66 1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="m6.34 17.66-1.41 1.41"></path>
+              <path d="m19.07 4.93-1.41 1.41"></path>
+            </svg>
+            Quản lý hệ thống
+            <svg class="nav-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              style="margin-left: auto; transition: none;">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="nav-submenu" style="display: none; flex-direction: column; padding-left: 24px; padding-top: 4px;">
+            <button class="nav-item nav-sub-item sys-menu-btn" data-target="account"
+              onclick="switchPage('system', this); switchSysMenu('account')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+              </svg>
+              Quản lý tài khoản
+            </button>
+            <button id="menu-sys-users" class="nav-item nav-sub-item sys-menu-btn" data-target="users"
+              onclick="switchPage('system', this); switchSysMenu('users')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              Quản lý vai trò
+            </button>
+            <button id="menu-sys-logs" class="nav-item nav-sub-item sys-menu-btn" data-target="logs"
+              onclick="switchPage('system', this); switchSysMenu('logs')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              Nhật ký hệ thống
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" id="user-avatar">AD</div>
+          <div class="sidebar-user-info">
+            <strong id="user-name">Admin</strong>
+            <span>Quản trị viên</span>
+          </div>
+          <button class="btn-logout-sidebar" onclick="logout()" title="Đăng xuất">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+    <div class="content">
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-title" id="topbar-title">Quản lý thiết bị</div>
+          <div class="topbar-breadcrumb" id="topbar-breadcrumb">Vị trí</div>
+        </div>
+        <div class="topbar-right">
+          <div class="conn-badge connected" id="conn-badge">
+            <div class="dot" id="conn-dot"></div>
+            <span id="conn-text">Connecting...</span>
+          </div>
+          <div class="live-clock" id="live-time"></div>
+        </div>
+      </div>
+      <main class="page-body">
+        <div id="page-dashboard" class="page-section active">
+          <div class="stat-cards">
+            <div class="stat-card card-total">
+              <div class="stat-icon stat-icon-total">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 7l-7 5 7 5V7z" />
+                  <rect x="1" y="5" width="15" height="14" rx="2" />
+                </svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value" id="stat-total">0</div>
+                <div class="stat-label">Tổng thiết bị</div>
+              </div>
+            </div>
+
+            <div class="stat-card card-online">
+              <div class="stat-icon stat-icon-online">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18.364 5.636a9 9 0 1 1-12.728 0" />
+                  <line x1="12" y1="2" x2="12" y2="12" />
+                </svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value" id="stat-online">0</div>
+                <div class="stat-label">Đang hoạt động</div>
+              </div>
+            </div>
+
+            <div class="stat-card card-offline">
+              <div class="stat-icon stat-icon-offline">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9" />
+                  <line x1="9" y1="9" x2="15" y2="15" />
+                  <line x1="15" y1="9" x2="9" y2="15" />
+                </svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value" id="stat-offline">0</div>
+                <div class="stat-label">Không hoạt động</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                Thiết bị đang theo dõi
+              </div>
+              <div class="panel-actions">
+                <div class="filter-group">
+                  <div class="search-wrap">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="11" cy="11" r="8" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="text" id="search-input" class="search-input" placeholder="Tìm MAC hoặc tên thiết bị">
+                  </div>
+                  <select id="status-filter" class="filter-select">
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="on">Hoạt động</option>
+                    <option value="off">Tắt</option>
+                  </select>
+                  <select id="room-filter" class="filter-select">
+                    <option value="all">Tất cả vị trí</option>
+                  </select>
+                </div>
+                <div class="action-buttons">
+                  <button class="btn-primary" onclick="openModal('modal-add')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    Thêm mới
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div id="root"></div>
+          </div>
+
+        </div><!-- /page-dashboard -->
+        <div id="page-devices" class="page-section">
+          <div id="device-table-container" class="appsheet-section">
+            <div class="appsheet-panel">
+              <div class="appsheet-panel-header">
+                <div class="appsheet-panel-meta">
+                  <h3>Danh sách thiết bị quản lý</h3>
+                  <p>Dữ liệu tự cập nhật theo thời gian thực. Có thể bấm "Tải lại" để đồng bộ ngay.</p>
+                </div>
+                <button id="btn-reload-appsheet" class="btn-primary" onclick="demoAppSheetSync()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                  Tải lại
+                </button>
+              </div>
+
+              <div class="appsheet-searchbar">
+                <div class="appsheet-search-wrap">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  <input type="text" id="appsheet-search" class="appsheet-search-input" oninput="renderAppSheetData()"
+                    placeholder="Tìm kiếm theo tên hoặc MAC...">
+                </div>
+              </div>
+
+              <div class="appsheet-table-wrap">
+                <table class="appsheet-table">
+                  <thead>
+                    <tr>
+                      <th>Tên thiết bị</th>
+                      <th>MAC</th>
+                      <th>Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody id="device-list-tbody">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div><!-- /page-devices -->
+
+        <div id="page-gateway" class="page-section">
+          <div class="gw-grid">
+            <div class="gw-col-main">
+              <!-- Gateway List Section -->
+              <div class="gateway-card" style="height: 100%;">
+                <div class="gateway-card-header">
+                  <div>
+                    <h3 class="gateway-card-title">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="7" width="18" height="10" rx="2" />
+                        <path d="M7 7V5a5 5 0 0 1 10 0v2" />
+                      </svg>
+                      Danh sách Gateway
+                    </h3>
+                    <p class="gateway-card-subtitle">Các Gateway đang hoạt động trong hệ thống</p>
+                  </div>
+                  <button class="btn-primary" onclick="publishWhitelist()">Đồng bộ Whitelist</button>
+                </div>
+                <div class="gateway-card-content">
+                  <div id="gateway-root">
+                    <div class="empty-state">
+                      <div class="empty-state-icon">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="3" y="7" width="18" height="10" rx="2" />
+                          <path d="M7 7V5a5 5 0 0 1 10 0v2" />
+                        </svg>
+                      </div>
+                      <h3>Chưa có Gateway</h3>
+                      <p>Kết nối Gateway đầu tiên để bắt đầu quản lý.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="gw-col-side">
+              <!-- Diagnostics Section -->
+              <div class="gateway-card">
+                <div class="gateway-card-header">
+                  <div>
+                    <h3 class="gateway-card-title">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="16" x2="12" y2="12" />
+                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                      </svg>
+                      Công cụ chẩn đoán
+                    </h3>
+                    <p class="gateway-card-subtitle">Theo dõi hoạt động và nhật ký hệ thống</p>
+                  </div>
+                  <div class="diag-stats" id="noise-stats">Thiết bị lạ: 0</div>
+                </div>
+                <div class="gateway-card-content">
+                  <div class="log-console" id="log-console">
+                    <div class="log-line system">[Hệ thống] Đang chờ dữ liệu từ Gateway...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!-- /page-gateway -->
+        <div id="page-reports" class="page-section">
+          <!-- ── TAB: Xuất dữ liệu ── -->
+          <div id="rpt-tab-export" class="rpt-tab-content active">
+            <!-- ── Row 1: Báo cáo cards ── -->
+            <div class="rpt-cards">
+              <!-- Báo cáo sự cố -->
+              <div class="rpt-card">
+                <div class="rpt-card-head">
+                  <div class="rpt-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706);">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path
+                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                      <line x1="12" y1="9" x2="12" y2="13" />
+                      <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="rpt-title">Báo cáo sự cố</div>
+                    <div class="rpt-sub">Thiết bị mất kết nối hoặc cảnh báo theo tháng</div>
+                  </div>
+                </div>
+                <div class="rpt-controls">
+                  <input type="month" class="rpt-input" id="incident-month" value="2026-04">
+                  <div class="rpt-btn-group">
+                    <button class="btn-primary" onclick="exportReport('incident', 'excel')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                      </svg>
+                      Excel
+                    </button>
+                    <button class="rpt-btn-outline" onclick="exportReport('incident', 'pdf')">PDF</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Báo cáo hiệu suất -->
+              <div class="rpt-card">
+                <div class="rpt-card-head">
+                  <div class="rpt-icon" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="rpt-title">Báo cáo hiệu suất</div>
+                    <div class="rpt-sub">Thống kê thời gian hoạt động của thiết bị</div>
+                  </div>
+                </div>
+                <div class="rpt-controls">
+                  <select class="rpt-input" id="uptime-range">
+                    <option value="7">7 ngày qua</option>
+                    <option value="30">30 ngày qua</option>
+                    <option value="90">90 ngày qua</option>
+                  </select>
+                  <button class="btn-primary" onclick="exportReport('performance', 'excel')">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2.5">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Xuất báo cáo
+                  </button>
+                </div>
+              </div>
+
+              <!-- Xuất dữ liệu thô -->
+              <div class="rpt-card">
+                <div class="rpt-card-head">
+                  <div class="rpt-icon" style="background:linear-gradient(135deg,#059669,#047857);">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="rpt-title">Xuất dữ liệu thô</div>
+                    <div class="rpt-sub">Tải dữ liệu RSSI </div>
+                  </div>
+                </div>
+                <div class="rpt-controls">
+                  <input type="date" class="rpt-input" id="raw-date-from" title="Từ ngày">
+                  <input type="date" class="rpt-input" id="raw-date-to" title="Đến ngày">
+                  <button class="btn-primary" onclick="exportReport('raw', 'csv')">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2.5">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Tải CSV
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── TAB: Truy vết ── -->
+          <div id="rpt-tab-tracking" class="rpt-tab-content" style="display: none;">
+            <!-- ── Row 2: Truy vết di chuyển ── -->
+            <div class="rpt-playback-card">
+              <div class="rpt-playback-header">
+                <div class="rpt-card-head">
+                  <div class="rpt-icon" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="rpt-title">Truy vết di chuyển</div>
+                    <div class="rpt-sub">Xem lại hành trình di chuyển của thiết bị</div>
+                  </div>
+                </div>
+                <div class="rpt-controls">
+                  <select class="rpt-input" id="playback-mac">
+                    <option value="">Chọn thiết bị...</option>
+                  </select>
+                  <input type="date" class="rpt-input" id="playback-date">
+                  <button class="btn-primary" onclick="startPlayback()">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2.5">
+                      <polygon points="5 3 19 12 5 21 5 3" />
+                    </svg>
+                    Chạy Playback
+                  </button>
+                </div>
+              </div>
+              <div class="rpt-playback-canvas" id="playback-area">
+                <div class="rpt-playback-empty">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-faint);">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  <span>Chọn thiết bị và ngày để xem hành trình</span>
+                </div>
+                <div class="playback-line" id="playback-anim" style="display:none"></div>
+              </div>
+            </div>
+          </div>
+        </div><!-- /page-reports -->
+
+        <div id="page-system" class="page-section">
+          <!-- ── Tab bar ── -->
+          <div class="sys-tabs" style="display: none;">
+            <button class="sys-tab active" onclick="switchSysTab('account', this)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+              </svg>
+              Tài khoản của tôi
+            </button>
+            <button class="sys-tab" onclick="switchSysTab('users', this)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              Quản lý người dùng
+            </button>
+          </div>
+
+          <!-- ══ TAB: Tài khoản ══ -->
+          <div id="sys-tab-account" class="sys-tab-content active">
+            <!-- TÌM KIẾM BLOCK -->
+            <div class="sys-section-card"
+              style="margin-bottom: 20px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;">
+              <!-- Header của form tìm kiếm -->
+              <div style="margin-bottom: 12px;">
+                <h3 style="margin: 0; font-size: 1rem; color: #1e293b; font-weight: 600;">Tìm kiếm</h3>
+              </div>
+
+              <!-- Các ô nhập liệu tìm kiếm -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                <div>
+                  <label
+                    style="display: block; font-size: 0.85rem; color: #475569; margin-bottom: 6px; font-weight: 500;">Tên
+                    đăng nhập</label>
+                  <input type="text" id="filter-usr-username" placeholder="Nhập tên đăng nhập để tìm kiếm"
+                    style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; background: #f8fafc;"
+                    oninput="filterUserTable()">
+                </div>
+                <div>
+                  <label
+                    style="display: block; font-size: 0.85rem; color: #475569; margin-bottom: 6px; font-weight: 500;">Họ
+                    và tên</label>
+                  <input type="text" id="filter-usr-fullname" placeholder="Nhập họ và tên để tìm kiếm"
+                    style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; background: #f8fafc;"
+                    oninput="filterUserTable()">
+                </div>
+                <div>
+                  <label
+                    style="display: block; font-size: 0.85rem; color: #475569; margin-bottom: 6px; font-weight: 500;">Trạng
+                    thái</label>
+                  <select id="filter-usr-status"
+                    style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; background-color: #f8fafc;"
+                    onchange="filterUserTable()">
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="online">Hoạt động</option>
+                    <option value="offline">Ngoại tuyến</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Nút Thêm mới và Tìm kiếm -->
+              <div style="display: flex; justify-content: flex-end; gap: 12px; padding-top: 0px;">
+                <button onclick="openAddUser()"
+                  style="display: flex; align-items: center; gap: 6px; padding: 6px 16px; background: linear-gradient(135deg, #2563eb, #1d4ed8);; color: white; border: none; border-radius: 4px; font-weight: 500; cursor: pointer; font-size: 0.9rem;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Thêm mới
+                </button>
+              </div>
+            </div>
+
+            <!-- DANH SÁCH TÀI KHOẢN BLOCK -->
+            <div class="sys-section-card"
+              style="padding: 0; gap: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;">
+              <!-- Header bảng -->
+              <div
+                style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; border-radius: 8px 8px 0 0;">
+                <h3 style="margin: 0; font-size: 1.1rem; color: #1e293b; font-weight: 600;">Danh sách tài khoản</h3>
+                <div style="display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 0.75rem;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  <span>Tổng cộng: <strong id="total-users-count" style="color: #3b82f6;">0</strong> tài khoản</span>
+                </div>
+              </div>
+              <!-- Bảng dữ liệu -->
+              <div class="sys-user-table-wrap" style="padding: 0; overflow-x: auto; border: none; border-radius: 0;">
+                <table class="sys-user-table"
+                  style="width: 100%; text-transform: uppercase; font-size: 0.75rem; color: #64748b; border-collapse: collapse;">
+                  <thead>
+                    <tr style="border-bottom: 1px solid #e2e8f0; text-align: left;">
+                      <th style="padding: 16px 8px; width: 40px; text-align: center;">STT</th>
+                      <th style="padding: 16px 8px;">Tên đăng nhập</th>
+                      <th style="padding: 16px 8px;">Họ và tên</th>
+                      <th style="padding: 16px 8px;">Email</th>
+                      <th style="padding: 16px 8px;">Số điện thoại</th>
+                      <th style="padding: 16px 8px;">Vai trò</th>
+                      <th style="padding: 16px 8px; text-align: center;">Trạng thái</th>
+                      <th style="padding: 16px 8px; text-align: right;">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sys-user-tbody" style="text-transform: none; font-size: 0.85rem; color: #1e293b;">
+                    <tr>
+                      <td colspan="8" style="text-align:center; padding: 2rem; color:var(--text-faint);">Đang tải dữ
+                        liệu...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div><!-- /tab-account -->
+
+          <!-- ══ TAB: Nhật ký hệ thống ══ -->
+          <div id="sys-tab-logs" class="sys-tab-content">
+            <div class="users-grid">
+              <div class="sys-section-card" style="grid-column: 1 / -1;">
+                <div class="sys-section-head">
+                  <div class="sys-section-icon" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                      <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="sys-section-title">Nhật ký hoạt động</div>
+                    <div class="sys-section-sub">Hoạt động gần đây của tài khoản và hệ thống</div>
+                  </div>
+                </div>
+                <div class="sys-info-list acc-activity-list" id="sys-activity-list" style="gap:0.75rem;">
+                  <div style="padding:1.5rem; text-align:center; color:var(--text-faint); grid-column:1/-1;">Đang tải
+                    hoạt động...</div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /tab-logs -->
+
+          <!-- ══ TAB: Người dùng ══ -->
+          <div id="sys-tab-users" class="sys-tab-content">
+            <div class="sys-section-card"
+              style="padding: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; border-radius: 8px;">
+              <!-- Header -->
+              <div
+                style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; border-radius: 8px 8px 0 0;">
+                <div>
+                  <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #1e293b; margin-bottom: 0.25rem;">
+                    Quản lý vai trò</h2>
+                  <p style="margin: 0; color: #64748b; font-size: 0.85rem;">Cấu hình và phân quyền cho người
+                    dùng trong hệ thống.</p>
+                </div>
+                <button class="btn-primary" onclick="openRoleModal()"
+                  style="display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 0.9rem;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Thêm vai trò
+                </button>
+              </div>
+
+              <!-- Bảng -->
+              <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                  <thead>
+                    <tr
+                      style="border-bottom: 1px solid #e2e8f0; background: #f1f5f9; color: #475569; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+                      <th style="padding: 16px 20px; font-weight: 600;">Thông tin định danh</th>
+                      <th style="padding: 16px 20px; font-weight: 600;">Mô tả chi tiết</th>
+                      <th style="padding: 16px 20px; font-weight: 600;">Hệ thống nhãn quyền</th>
+                      <th style="padding: 16px 20px; font-weight: 600; text-align: right;">Thao tác nhanh</th>
+                    </tr>
+                  </thead>
+                  <tbody style="color: #1e293b;">
+                    <tr style="border-bottom: 1px solid #e2e8f0; transition: background 0.2s;"
+                      onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                      <td style="padding: 16px 20px;">
+                        <div
+                          style="font-weight: 600; color: #0f172a; display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+                          Quản trị viên
+                          <span
+                            style="font-size: 0.65rem; padding: 2px 6px; background: #fee2e2; color: #ef4444; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Admin</span>
+                        </div>
+                      </td>
+                      <td style="padding: 16px 20px; color: #64748b; max-width: 250px; line-height: 1.4;">
+                        Quyền hạn tối đa. Quản lý toàn bộ hệ thống, thiết bị và cấu hình hệ thống.
+                      </td>
+                      <td style="padding: 16px 20px;">
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                          <span
+                            style="background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 500;">Tất
+                            cả quyền</span>
+                          <span
+                            style="background: #f1f5f9; color: #475569; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 500;">Quản
+                            lý tài khoản</span>
+                          <span
+                            style="background: #f1f5f9; color: #475569; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 500;">Cấu
+                            hình thiết bị</span>
+                        </div>
+                      </td>
+                      <td style="padding: 16px 20px; text-align: right;">
+                        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                          <button onclick="openRoleModal('Admin')"
+                            style="padding: 6px 12px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.8rem; font-weight: 500; color: #334155; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;"
+                            onmouseover="this.style.background='#f8fafc'; this.style.borderColor='#94a3b8'; this.style.color='#0f172a';"
+                            onmouseout="this.style.background='white'; this.style.borderColor='#cbd5e1'; this.style.color='#334155';">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Sửa
+                          </button>
+                          <button onclick="openRoleDetailModal('Admin')"
+                            style="padding: 6px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8rem; font-weight: 500; color: #0f172a; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;"
+                            onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1';"
+                            onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                              <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            Xem chi tiết
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr style="border-bottom: 1px solid #e2e8f0; transition: background 0.2s;"
+                      onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                      <td style="padding: 16px 20px;">
+                        <div
+                          style="font-weight: 600; color: #0f172a; display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+                          Quản lý
+                          <span
+                            style="font-size: 0.65rem; padding: 2px 6px; background: #fef9c3; color: #ca8a04; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Manager</span>
+                        </div>
+                      </td>
+                      <td style="padding: 16px 20px; color: #64748b; max-width: 250px; line-height: 1.4;">
+                        Tập trung vào điều hành. Giám sát thiết bị, đọc nhật ký và phân tích báo cáo.
+                      </td>
+                      <td style="padding: 16px 20px;">
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                          <span
+                            style="background: #dcfce7; color: #15803d; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 500;">Giám
+                            sát bản đồ</span>
+                          <span
+                            style="background: #f1f5f9; color: #475569; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 500;">Báo
+                            cáo</span>
+                          <span
+                            style="background: #f1f5f9; color: #475569; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 500;">Xem
+                            Logs</span>
+                        </div>
+                      </td>
+                      <td style="padding: 16px 20px; text-align: right;">
+                        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                          <button onclick="openRoleModal('Manager')"
+                            style="padding: 6px 12px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.8rem; font-weight: 500; color: #334155; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;"
+                            onmouseover="this.style.background='#f8fafc'; this.style.borderColor='#94a3b8'; this.style.color='#0f172a';"
+                            onmouseout="this.style.background='white'; this.style.borderColor='#cbd5e1'; this.style.color='#334155';">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Sửa
+                          </button>
+                          <button onclick="openRoleDetailModal('Manager')"
+                            style="padding: 6px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8rem; font-weight: 500; color: #0f172a; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;"
+                            onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1';"
+                            onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                              <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            Xem chi tiết
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr style="transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'"
+                      onmouseout="this.style.background='transparent'">
+                      <td style="padding: 16px 20px;">
+                        <div
+                          style="font-weight: 600; color: #0f172a; display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+                          Người dùng
+                          <span
+                            style="font-size: 0.65rem; padding: 2px 6px; background: #e0e7ff; color: #4338ca; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">User</span>
+                        </div>
+                      </td>
+                      <td style="padding: 16px 20px; color: #64748b; max-width: 250px; line-height: 1.4;">
+                        Sử dụng cơ bản. Chỉ theo dõi thiết bị hiện tại, không tiếp cận dữ liệu cấu hình.
+                      </td>
+                      <td style="padding: 16px 20px;">
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                          <span
+                            style="background: #dcfce7; color: #15803d; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 500;">Giám
+                            sát bản đồ</span>
+                        </div>
+                      </td>
+                      <td style="padding: 16px 20px; text-align: right;">
+                        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                          <button onclick="openRoleModal('User')"
+                            style="padding: 6px 12px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.8rem; font-weight: 500; color: #334155; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;"
+                            onmouseover="this.style.background='#f8fafc'; this.style.borderColor='#94a3b8'; this.style.color='#0f172a';"
+                            onmouseout="this.style.background='white'; this.style.borderColor='#cbd5e1'; this.style.color='#334155';">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Sửa
+                          </button>
+                          <button onclick="openRoleDetailModal('User')"
+                            style="padding: 6px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8rem; font-weight: 500; color: #0f172a; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;"
+                            onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1';"
+                            onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                              <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            Xem chi tiết
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- [sysinfo tab removed] -->
+          <div id="sys-tab-sysinfo" class="sys-tab-content">
+            <div class="sys-two-col">
+              <!-- Server info -->
+              <div class="sys-section-card">
+                <div class="sys-section-head">
+                  <div class="sys-section-icon" style="background: linear-gradient(135deg,#d97706,#b45309);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="3" width="20" height="14" rx="2" />
+                      <line x1="8" y1="21" x2="16" y2="21" />
+                      <line x1="12" y1="17" x2="12" y2="21" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="sys-section-title">Thông tin máy chủ</div>
+                    <div class="sys-section-sub">Cấu hình backend & kết nối</div>
+                  </div>
+                </div>
+                <div class="sys-info-list">
+                  <div class="sys-info-row">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                      <path
+                        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                    <span class="sys-info-label">Địa chỉ Server</span>
+                    <code class="sys-code-val">localhost:3000</code>
+                  </div>
+                  <div class="sys-info-row">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                    </svg>
+                    <span class="sys-info-label">MQTT Broker</span>
+                    <code class="sys-code-val">mqtt://localhost:1883</code>
+                  </div>
+                  <div class="sys-info-row">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M18 20V10" />
+                      <path d="M12 20V4" />
+                      <path d="M6 20v-6" />
+                    </svg>
+                    <span class="sys-info-label">Phiên bản</span>
+                    <span class="sys-ver-badge" id="sys-ver-master">...</span>
+                  </div>
+                  <div class="sys-info-row">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    <span class="sys-info-label">Uptime</span>
+                    <strong id="sys-uptime">—</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- MQTT Topics -->
+              <div class="sys-section-card">
+                <div class="sys-section-head">
+                  <div class="sys-section-icon" style="background: linear-gradient(135deg,#0891b2,#0e7490);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path
+                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.16 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.17a16 16 0 0 0 8 8l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="sys-section-title">MQTT Topics</div>
+                    <div class="sys-section-sub">Các topic đang lắng nghe</div>
+                  </div>
+                </div>
+                <div class="sys-topic-list">
+                  <div class="sys-topic-item">
+                    <span class="sys-topic-badge pub">SUB</span>
+                    <code>ble/gateway/+/data</code>
+                  </div>
+                  <div class="sys-topic-item">
+                    <span class="sys-topic-badge pub">SUB</span>
+                    <code>ble/gateway/+/status</code>
+                  </div>
+                  <div class="sys-topic-item">
+                    <span class="sys-topic-badge cmd">PUB</span>
+                    <code>ble/gateway/+/config</code>
+                  </div>
+                  <div class="sys-topic-item">
+                    <span class="sys-topic-badge cmd">PUB</span>
+                    <code>ble/whitelist</code>
+                  </div>
+                </div>
+              </div>
+
+              <!-- System Stats -->
+              <div class="sys-section-card" style="grid-column:1/-1;">
+                <div class="sys-section-head">
+                  <div class="sys-section-icon" style="background: linear-gradient(135deg,#9333ea,#7e22ce);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9" />
+                      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="sys-section-title">Thống kê hệ thống</div>
+                    <div class="sys-section-sub">Trạng thái tổng quan theo thời gian thực</div>
+                  </div>
+                </div>
+                <div class="sys-stats-row">
+                  <div class="sys-stat-chip">
+                    <div class="sys-stat-chip-val" id="sys-stat-total">—</div>
+                    <div class="sys-stat-chip-label">Tổng thiết bị</div>
+                  </div>
+                  <div class="sys-stat-chip">
+                    <div class="sys-stat-chip-val" style="color:#16a34a;" id="sys-stat-online">—</div>
+                    <div class="sys-stat-chip-label">Đang online</div>
+                  </div>
+                  <div class="sys-stat-chip">
+                    <div class="sys-stat-chip-val" style="color:#dc2626;" id="sys-stat-offline">—</div>
+                    <div class="sys-stat-chip-label">Offline</div>
+                  </div>
+                  <div class="sys-stat-chip">
+                    <div class="sys-stat-chip-val" id="sys-stat-gw">—</div>
+                    <div class="sys-stat-chip-label">Gateway</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!-- /page-system -->
+
+      </main>
+    </div><!-- /content -->
+  </div><!-- /layout -->
+
+  <div id="modal-gw-config" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Cấu hình Gateway</h2>
+        <button class="modal-close" type="button" onclick="closeModal('modal-gw-config')">×</button>
+      </div>
+      <div class="modal-field">
+        <label>Gateway ID</label>
+        <input type="text" id="config-gw-id" class="modal-input" readonly>
+      </div>
+      <div class="modal-field">
+        <label>Scan Interval (ms)</label>
+        <input type="number" id="config-scan-interval" class="modal-input" placeholder="100">
+      </div>
+      <div class="modal-field">
+        <label>Scan Window (ms)</label>
+        <input type="number" id="config-scan-window" class="modal-input" placeholder="50">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="saveGwConfig()">Lưu cấu hình</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal xác nhận xóa người dùng với PIN -->
+  <div id="modal-delete-user" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Xác nhận xóa người dùng</h2>
+        <button class="modal-close" type="button" onclick="closeModal('modal-delete-user')">×</button>
+      </div>
+      <div
+        style="padding: 1rem 1.5rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px; margin: 0 1.5rem 1.5rem 1.5rem;">
+        <p style="margin: 0; font-size: 0.9rem; color: #856404;">
+          <strong>Lưu ý:</strong> Hành động này không thể hoàn tác. Vui lòng nhập mã PIN của bạn để xác nhận xóa.
+        </p>
+      </div>
+      <div class="modal-field">
+        <label>Người dùng sẽ bị xóa</label>
+        <input type="text" id="delete-user-name" class="modal-input" readonly
+          style="background: #f5f5f5; cursor: not-allowed;">
+      </div>
+      <div class="modal-field">
+        <label>Mã PIN của bạn <span style="color: #e74c3c;">*</span></label>
+        <input type="password" id="delete-user-pin" class="modal-input" placeholder="Nhập mã PIN của bạn"
+          onkeypress="if(event.key==='Enter') confirmDeleteUserWithPin()">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" style="background: #e74c3c;" onclick="confirmDeleteUserWithPin()">Xóa tài
+          khoản</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-add-user" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-add-user-title">Thêm người dùng mới</h2>
+        <button class="modal-close" type="button" onclick="closeModal('modal-add-user')">×</button>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="modal-field">
+          <label>Tên đăng nhập <span style="color:red">*</span></label>
+          <input type="text" id="user-new-username" class="modal-input" placeholder="">
+        </div>
+        <div class="modal-field">
+          <label>Mật khẩu <span style="color:red">*</span></label>
+          <input type="password" id="user-new-password" class="modal-input" placeholder="">
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="modal-field">
+          <label>Họ và tên</label>
+          <input type="text" id="user-new-fullname" class="modal-input" placeholder="">
+        </div>
+        <div class="modal-field">
+          <label>Vai trò</label>
+          <select id="user-new-role" class="modal-input" style="font-family: inherit;">
+            <option value="admin">Admin</option>
+            <option value="manager">Manager</option>
+            <option value="user">User</option>
+          </select>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="modal-field">
+          <label>Email</label>
+          <input type="email" id="user-new-email" class="modal-input" placeholder="">
+        </div>
+        <div class="modal-field">
+          <label>Số điện thoại</label>
+          <input type="tel" id="user-new-phone" class="modal-input" placeholder="">
+        </div>
+      </div>
+      <input type="hidden" id="user-edit-mode" value="false">
+      <div class="modal-actions" style="justify-content: flex-end; display: flex; gap: 12px; margin-top: 20px;">
+        <button class="btn-secondary"
+          style="height: 36px; padding: 0 16px; font-size: 0.85rem; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; margin: 0;"
+          onclick="closeModal('modal-add-user')">Hủy</button>
+        <button class="btn-primary"
+          style="height: 36px; padding: 0 16px; font-size: 0.85rem; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; margin: 0;"
+          onclick="submitUser()" id="btn-submit-user">Tạo người dùng</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-add" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Thêm thiết bị</h2>
+        <button class="modal-close" type="button" onclick="closeModal('modal-add')">×</button>
+      </div>
+      <div class="modal-field">
+        <label>Địa chỉ MAC</label>
+        <input type="text" id="add-mac" class="modal-input" placeholder="">
+      </div>
+      <div class="modal-field">
+        <label>Tên thiết bị</label>
+        <input type="text" id="add-name" class="modal-input" placeholder="">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="addDevice()">Lưu thiết bị</button>
+      </div>
+    </div>
+  </div>
+  <div id="modal-remove" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Xoá thiết bị</h2>
+        <button class="modal-close" type="button" onclick="closeModal('modal-remove')">×</button>
+      </div>
+      <div class="modal-field">
+        <label>Tên thiết bị</label>
+        <input type="text" id="rm-name" class="modal-input" placeholder="" readonly>
+      </div>
+      <div class="modal-field">
+        <label>Địa chỉ MAC</label>
+        <input type="text" id="rm-mac" class="modal-input" placeholder="">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-danger" onclick="removeDevice()">Xoá</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-detail" class="modal-overlay">
+    <div class="modal" style="width: 700px; max-width: 95vw;">
+      <div class="modal-header">
+        <h2>Chi tiết thiết bị</h2>
+        <button class="modal-close" type="button" onclick="closeModal('modal-detail')">×</button>
+      </div>
+      <div id="detail-body"></div>
+    </div>
+  </div>
+  <div id="modal-change-password" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Đổi mật khẩu</h2>
+        <button class="modal-close" type="button" onclick="closeModal('modal-change-password')">×</button>
+      </div>
+      <div class="modal-field">
+        <label>Mật khẩu hiện tại</label>
+        <input type="password" id="pwd-current" class="modal-input" placeholder="Nhập mật khẩu hiện tại">
+      </div>
+      <div class="modal-field">
+        <label>Mật khẩu mới</label>
+        <input type="password" id="pwd-new" class="modal-input" placeholder="Nhập mật khẩu mới">
+      </div>
+      <div class="modal-field">
+        <label>Xác nhận mật khẩu mới</label>
+        <input type="password" id="pwd-confirm" class="modal-input" placeholder="Xác nhận mật khẩu mới">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="changePassword()">Cập nhật</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ MODAL ĐẶT LẠI PIN ══════════ -->
+  <div id="modal-change-pin" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Đặt lại PIN</h2>
+        <button class="modal-close" type="button" onclick="closeModal('modal-change-pin')">×</button>
+      </div>
+      <div class="modal-field">
+        <label>PIN mới (4-6 chữ số)</label>
+        <input type="password" id="pin-new" class="modal-input" placeholder="Nhập PIN mới" maxlength="6">
+      </div>
+      <div class="modal-field">
+        <label>Xác nhận PIN</label>
+        <input type="password" id="pin-confirm" class="modal-input" placeholder="Xác nhận PIN" maxlength="6">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="changePin()">Cập nhật PIN</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    function logout() {
+      sessionStorage.removeItem("ble_auth");
+      sessionStorage.removeItem("ble_user");
+      sessionStorage.removeItem("ble_role");
+      location.replace("/login.html");
+    }
+
+    const storedUser = sessionStorage.getItem("ble_user") || "admin";
+    const storedRole = sessionStorage.getItem("ble_role") || "admin";
+
+    document.getElementById("user-name").textContent =
+      storedUser.charAt(0).toUpperCase() + storedUser.slice(1);
+    document.getElementById("user-avatar").textContent =
+      storedUser.slice(0, 2).toUpperCase();
+
+    // Hệ thống phân quyền (RBAC)
+    function applyRolePermissions() {
+      const role = storedRole;
+
+      const menuReports = document.getElementById("menu-group-reports");
+      const menuSysUsers = document.getElementById("menu-sys-users");
+      const menuSysLogs = document.getElementById("menu-sys-logs");
+
+      if (role === "manager") {
+        // Manager không có quyền quản lý tài khoản/vai trò
+        if (menuSysUsers) menuSysUsers.style.display = "none";
+      } else if (role !== "admin") {
+        // User thường không có quyền xem Báo cáo, Quản lý tài khoản, Nhật ký
+        if (menuReports) menuReports.style.display = "none";
+        if (menuSysUsers) menuSysUsers.style.display = "none";
+        if (menuSysLogs) menuSysLogs.style.display = "none";
+      }
+    }
+    applyRolePermissions();
+
+    function switchPage(pageName) {
+      if (pageName === 'gateway') {
+        setTimeout(renderGateways, 100);
+      }
+      const pages = document.querySelectorAll('.page-section');
+      pages.forEach(page => page.classList.remove('active'));
+
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => item.classList.remove('active'));
+
+      const selectedPage = document.getElementById(`page-${pageName}`);
+      if (selectedPage) {
+        selectedPage.classList.add('active');
+      }
+
+      if (typeof event !== 'undefined' && event && event.target && event.target.closest('.nav-item')) {
+        event.target.closest('.nav-item').classList.add('active');
+      }
+
+      const topbarTitle = document.getElementById('topbar-title');
+      const topbarBreadcrumb = document.getElementById('topbar-breadcrumb');
+
+      switch (pageName) {
+        case 'dashboard':
+          if (topbarTitle) topbarTitle.textContent = 'Quản lý vị trí';
+          if (topbarBreadcrumb) topbarBreadcrumb.textContent = 'Theo dõi vị trí thiết bị trên bản đồ thời gian thực';
+          break;
+        case 'devices':
+          if (topbarTitle) topbarTitle.textContent = 'Quản lý thiết bị';
+          if (topbarBreadcrumb) topbarBreadcrumb.textContent = 'Quản lý danh sách và trạng thái các thiết bị';
+          break;
+        case 'gateway':
+          if (topbarTitle) topbarTitle.textContent = 'Quản lý Gateway';
+          if (topbarBreadcrumb) topbarBreadcrumb.textContent = 'Quản lý các trạm máy chủ';
+          break;
+        case 'reports':
+          // Titles are handled in switchRptMenu
+          break;
+        case 'system':
+          // Titles are handled in switchSysMenu
+          break;
+        default:
+          if (topbarTitle) topbarTitle.textContent = '';
+          if (topbarBreadcrumb) topbarBreadcrumb.textContent = '';
+      }
+    }
+
+    /* ── DOM refs ── */
+    const root = document.getElementById("root");
+    const statTotal = document.getElementById("stat-total");
+    const statOnline = document.getElementById("stat-online");
+    const statOffline = document.getElementById("stat-offline");
+    const connBadge = document.getElementById("conn-badge");
+    const connDot = document.getElementById("conn-dot");
+    const connText = document.getElementById("conn-text");
+    const searchInput = document.getElementById("search-input");
+    const statusFilter = document.getElementById("status-filter");
+    const roomFilter = document.getElementById("room-filter");
+    const liveTime = document.getElementById("live-time");
+    const gatewayRoot = document.getElementById("gateway-root");
+    const logConsole = document.getElementById("log-console");
+    const noiseStats = document.getElementById("noise-stats");
+
+    // Device page refs
+    const devSearchInput = document.getElementById("dev-search-input");
+    const devStatusFilter = document.getElementById("dev-status-filter");
+    const devRoomFilter = document.getElementById("dev-room-filter");
+    const deviceList = document.getElementById("device-list");
+
+    let devices = {};
+    let gateways = {};
+    let lastMgmtKey = "";
+    let lastMgmtAt = 0;
+    let statePollInFlight = false;
+    let selectedDeviceId = "";
+    const drafts = { add: { mac: "", name: "" }, remove: { mac: "", name: "" } };
+    const REPORT_HISTORY_KEY = 'report_history_v1';
+    const REPORT_HISTORY_LIMIT = 8000;
+    const STATE_POLL_INTERVAL_MS = 4000;
+    let reportHistory = [];
+
+    loadReportHistory();
+
+    /* ── Live Clock ── */
+    function updateLiveTime() {
+      const now = new Date();
+      const d = now.toLocaleDateString('vi-VN');
+      const t = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+      liveTime.textContent = `${d}  ${t}`;
+    }
+    updateLiveTime();
+    setInterval(updateLiveTime, 1000);
+
+    /* ── Connection ── */
+    function setConnected(isConn) {
+      if (!connBadge || !connDot || !connText) return;
+      if (isConn) {
+        connBadge.className = 'conn-badge connected';
+        connDot.style.background = 'var(--success)';
+        connText.innerText = 'Connected';
+      } else {
+        connBadge.className = 'conn-badge disconnected';
+        connDot.style.background = 'var(--danger)';
+        connText.innerText = 'Disconnected';
+      }
+    }
+
+    /* ── Room Filter ── */
+    function updateRoomFilter() {
+      if (!roomFilter) return;
+      const rooms = new Set();
+      for (const id of Object.keys(devices)) {
+        const r = devices[id]?.currentRoom;
+        if (r) rooms.add(r);
+      }
+      const cur = roomFilter.value;
+      roomFilter.innerHTML = '<option value="all">Tất cả vị trí</option>';
+      for (const room of Array.from(rooms).sort()) {
+        const opt = document.createElement("option");
+        opt.value = room; opt.textContent = room;
+        roomFilter.appendChild(opt);
+      }
+      if (Array.from(rooms).includes(cur)) roomFilter.value = cur;
+    }
+
+    /* Device Room Filter - for devices page */
+    function updateDeviceRoomFilter() {
+      if (!devRoomFilter) return;
+      const rooms = new Set();
+      for (const id of Object.keys(devices)) {
+        const r = devices[id]?.meta?.room;
+        if (r) rooms.add(r);
+      }
+      const cur = devRoomFilter.value;
+      devRoomFilter.innerHTML = '<option value="all">Tất cả vị trí</option><option value="untagged">Chưa gắn tag</option>';
+      for (const room of Array.from(rooms).sort()) {
+        const opt = document.createElement("option");
+        opt.value = room; opt.textContent = room;
+        devRoomFilter.appendChild(opt);
+      }
+      if (cur === 'all' || cur === 'untagged' || Array.from(rooms).includes(cur)) {
+        devRoomFilter.value = cur;
+      }
+    }
+
+    /* ── Helpers ── */
+    function formatDateOnly(ms) {
+      return new Date(ms).toLocaleDateString('vi-VN');
+    }
+
+    function formatTimeOnly(ms) {
+      return new Date(ms).toLocaleTimeString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    }
+
+    function hashToNumber(text) {
+      let hash = 0;
+      for (let i = 0; i < text.length; i += 1) {
+        hash = ((hash << 5) - hash) + text.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash);
+    }
+
+    function buildEnergyPath(points, width, height) {
+      if (!points.length) return { line: '', area: '' };
+      const step = width / (points.length - 1);
+      const maxVal = Math.max(...points);
+      const minVal = Math.min(...points);
+      const padding = height * 0.1;
+      const innerHeight = height - padding * 2;
+      const range = Math.max(1, maxVal - minVal);
+
+      const scaled = points.map((v, i) => {
+        const x = Number((i * step).toFixed(1));
+        const y = Number((padding + innerHeight - ((v - minVal) / range) * innerHeight).toFixed(1));
+        return { x, y };
+      });
+
+      let line = `M${scaled[0].x},${scaled[0].y}`;
+      for (let i = 0; i < scaled.length - 1; i += 1) {
+        const p1 = scaled[i];
+        const p2 = scaled[i + 1];
+        const cpX = Number((p1.x + (p2.x - p1.x) / 2).toFixed(1));
+        line += ` C${cpX},${p1.y} ${cpX},${p2.y} ${p2.x},${p2.y}`;
+      }
+
+      const area = `${line} L${width},${height} L0,${height} Z`;
+      return { line, area };
+    }
+
+    function getDeviceEnergySample(mac) {
+      const dev = devices[mac];
+      let actualPower = 0;
+      let hasRealPower = false;
+
+      if (dev && dev.meta && typeof dev.meta.power === "number") {
+        actualPower = dev.meta.power;
+        hasRealPower = true;
+      }
+
+      const base = hasRealPower ? actualPower : (40 + (hashToNumber(mac) % 180));
+
+      const points = Array.from({ length: 24 }, (_, i) => {
+        const wave = Math.sin((i / 24) * Math.PI * 2) * (base > 50 ? 12 : 2);
+        const jitter = (hashToNumber(`${mac}-${i}`) % 10) - 5;
+        let p = Math.max(0, base + wave + jitter);
+
+        if (i === 23 && hasRealPower) {
+          p = actualPower;
+        }
+        return p;
+      });
+
+      return {
+        watt: hasRealPower ? actualPower.toFixed(1) : (base + (hashToNumber(mac) % 15) / 10).toFixed(1),
+        points,
+      };
+    }
+
+    /* ── Render ── */
+    function render() {
+      if (!root) return;
+      const ids = Object.keys(devices).sort();
+      const onlineIds = ids.filter(id => devices[id].meta?.status === 1);
+      const offlineIds = ids.filter(id => devices[id].meta?.status !== 1);
+
+      if (statTotal) statTotal.textContent = ids.length;
+      if (statOnline) statOnline.textContent = onlineIds.length;
+      if (statOffline) statOffline.textContent = offlineIds.length;
+      updateRoomFilter();
+
+      const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      const statusValue = statusFilter ? statusFilter.value : 'all';
+      const roomValue = roomFilter ? roomFilter.value : 'all';
+
+      if (!ids.length) {
+        root.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+              </svg>
+            </div>
+            <h3>Chưa có thiết bị</h3>
+            <p>Nhấn "Thêm mới" để thêm thiết bị theo dõi.</p>
+          </div>`;
+        return;
+      }
+
+      const rows = [];
+      if (selectedDeviceId && !devices[selectedDeviceId]) {
+        selectedDeviceId = '';
+      }
+      for (const deviceId of ids) {
+        const d = devices[deviceId];
+        const current = d.currentRoom;
+        const meta = d.meta || {};
+        const name = meta.name || (meta.id != null ? `Thiết bị ${meta.id}` : deviceId);
+        const status = meta.status === 1 ? 'on' : 'off';
+
+        if (query) {
+          const target = `${deviceId} ${name}`.toLowerCase();
+          if (!target.includes(query)) continue;
+        }
+        if (statusValue !== 'all' && statusValue !== status) continue;
+        if (roomValue !== 'all' && roomValue !== current) continue;
+
+        const locationHTML = current
+          ? `<span class="location-tag">${current}</span>`
+          : `<span class="location-unknown">— Không xác định</span>`;
+
+        const statusHTML = status === 'on'
+          ? `<span class="status-pill status-on">
+               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+                 <path d="M18.364 5.636a9 9 0 1 1-12.728 0"/><line x1="12" y1="2" x2="12" y2="12"/>
+               </svg>
+               Hoạt động
+             </span>`
+          : `<span class="status-pill status-off">
+               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+                 <circle cx="12" cy="12" r="9"/>
+                 <line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/>
+               </svg>
+               Tắt
+             </span>`;
+
+        rows.push(`
+          <tr class="device-row${selectedDeviceId === deviceId ? ' selected' : ''}">
+            <td>
+              <div class="device-cell">
+                <div class="device-info">
+                  <div class="device-name">${name}</div>
+                  <div class="device-mac">${deviceId}</div>
+                </div>
+              </div>
+            </td>
+            <td>${locationHTML}</td>
+            <td>${statusHTML}</td>
+            <td><span class="time-ago">${formatDateOnly(d.updatedAt || Date.now())}</span></td>
+            <td class="action-cell">
+              <button class="row-action btn-view" type="button" title="Xem thông tin" aria-label="Xem thông tin"
+                onclick="selectDevice('${deviceId}'); event.stopPropagation();">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+              <button class="row-action btn-delete" type="button" title="Xoá thiết bị" aria-label="Xoá thiết bị"
+                onclick="openRemoveFor('${deviceId}'); event.stopPropagation();">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  <line x1="10" y1="11" x2="10" y2="17" />
+                  <line x1="14" y1="11" x2="14" y2="17" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        `);
+      }
+
+      let scrollPos = 0;
+      const scrollEl = root.querySelector('.table-scroll');
+      if (scrollEl) scrollPos = scrollEl.scrollTop;
+
+      root.innerHTML = `
+        <div class="table-scroll">
+          <table class="device-table">
+            <thead>
+              <tr>
+                <th>Thiết bị</th>
+                <th>Vị trí</th>
+                <th>Trạng thái</th>
+                <th>Cập nhật</th>
+                <th>Thao tác</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.length
+          ? rows.join('')
+          : '<tr><td class="table-empty" colspan="5">Không tìm thấy thiết bị phù hợp</td></tr>'}
+            </tbody>
+          </table>
+        </div>`;
+
+      const newScrollEl = root.querySelector('.table-scroll');
+      if (newScrollEl && scrollPos > 0) newScrollEl.scrollTop = scrollPos;
+
+      updateSysStats();
+    }
+    /* ── Gateways Render ── */
+    function renderGateways() {
+      if (!gatewayRoot) return;
+      const ids = Object.keys(gateways).sort();
+      if (!ids.length) {
+        gatewayRoot.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="10" rx="2" /><path d="M7 7V5a5 5 0 0 1 10 0v2" /></svg></div>
+            <h3>Danh sách Gateway</h3>
+            <p>Các Gateway đang hoạt động.</p>
+          </div>`;
+        return;
+      }
+
+      const rows = ids.map(id => {
+        const gw = gateways[id];
+        const isOnline = (Date.now() - (gw.lastSeen || 0)) < 15000;
+        const statusHTML = isOnline
+          ? `<span class="status-pill status-on"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18.364 5.636a9 9 0 1 1-12.728 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg> Online</span>`
+          : `<span class="status-pill status-off"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg> Offline</span>`;
+
+        return `
+          <tr>
+            <td><strong>${id}</strong></td>
+            <td><code style="font-size:0.75rem;">${gw.ip || '192.168.1.10'}</code></td>
+            <td>${statusHTML}</td>
+            <td><span class="location-tag" style="background:#fff3e0; color:#e65100;">📶 -${40 + Math.floor(Math.random() * 30)} dBm</span></td>
+            <td style="text-align:right;">
+              <button class="btn-icon" onclick="openGwConfig('${id}')" title="Cấu hình"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+              <button class="btn-icon danger" onclick="rebootGateway('${id}')" title="Reboot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg></button>
+            </td>
+          </tr>`;
+      });
+
+      let gwScrollPos = 0;
+      const gwScrollEl = gatewayRoot.querySelector('.table-scroll');
+      if (gwScrollEl) gwScrollPos = gwScrollEl.scrollTop;
+
+      gatewayRoot.innerHTML = `
+        <div class="table-scroll">
+          <table class="user-table">
+            <thead>
+              <tr>
+                <th>Tên Gateway</th>
+                <th>Địa chỉ IP</th>
+                <th>Trạng thái</th>
+                <th>WiFi RSSI</th>
+                <th style="text-align:right;">Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.join('')}
+            </tbody>
+          </table>
+        </div>`;
+
+      const newGwScrollEl = gatewayRoot.querySelector('.table-scroll');
+      if (newGwScrollEl && gwScrollPos > 0) newGwScrollEl.scrollTop = gwScrollPos;
+    }
+
+    /* ── Render Devices Page ── */
+    function renderDevices() {
+      if (!deviceList) return;
+
+      const ids = Object.keys(devices).sort();
+      const onlineIds = ids.filter(id => devices[id].meta?.status === 1);
+      const offlineIds = ids.filter(id => devices[id].meta?.status !== 1);
+
+      // Toggle visibility between center and table
+      const deviceManagementCenter = document.querySelector('.device-management-center');
+      const deviceTableContainer = document.getElementById('device-table-container');
+
+      if (!ids.length) {
+        if (deviceManagementCenter) deviceManagementCenter.style.display = 'flex';
+        if (deviceTableContainer) deviceTableContainer.style.display = 'none';
+        return;
+      }
+
+      // Show table, hide center
+      if (deviceManagementCenter) deviceManagementCenter.style.display = 'none';
+      if (deviceTableContainer) deviceTableContainer.style.display = 'block';
+
+      // Update room filter options
+      updateDeviceRoomFilter();
+
+      const query = devSearchInput?.value.trim().toLowerCase() || '';
+      const statusValue = devStatusFilter?.value || 'all';
+      const roomValue = devRoomFilter?.value || 'all';
+
+      const rows = ids.map(deviceId => {
+        const dev = devices[deviceId];
+        const meta = dev?.meta || {};
+        const name = meta.name || (meta.id != null ? `Thiết bị ${meta.id}` : deviceId);
+        const room = meta.room || 'Chưa xác định';
+        const lastUpdate = dev?.updatedAt || Date.now();
+        const timeAgo = Math.floor((Date.now() - lastUpdate) / 1000);
+        let timeText;
+        if (timeAgo < 60) timeText = 'Vừa cập nhật';
+        else if (timeAgo < 3600) timeText = Math.floor(timeAgo / 60) + ' phút trước';
+        else if (timeAgo < 86400) timeText = Math.floor(timeAgo / 3600) + ' giờ trước';
+        else timeText = Math.floor(timeAgo / 86400) + ' ngày trước';
+
+        const isOnline = meta.status === 1;
+        const statusHTML = isOnline
+          ? `<span class="status-pill status-on"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="1"/></svg> Online</span>`
+          : `<span class="status-pill status-off"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg> Offline</span>`;
+
+        // Filters
+        const matchSearch = !query || name.toLowerCase().includes(query) || deviceId.toLowerCase().includes(query);
+        const matchStatus = statusValue === 'all' || (statusValue === 'online' && isOnline) || (statusValue === 'offline' && !isOnline);
+        const matchRoom = roomValue === 'all' ||
+          (roomValue === 'untagged' && !meta.room) ||
+          (meta.room === roomValue);
+        if (!matchSearch || !matchStatus || !matchRoom) return '';
+
+        return `
+          <tr class="device-row" onclick="selectDevice('${deviceId}')">
+            <td>
+              <div class="device-cell">
+                <div class="device-info">
+                  <div class="device-name">${name}</div>
+                  <div class="device-mac">${deviceId}</div>
+                </div>
+              </div>
+            </td>
+            <td><code style="font-size:0.75rem; background:#f3f4f6; padding:2px 6px; border-radius:4px;">${deviceId}</code></td>
+            <td style="text-align:right;">
+              <button class="row-action" onclick="selectDevice('${deviceId}'); event.stopPropagation();" title="Chi tiết">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><path d="M20 12c-1.5 2.5-5 4-8 4s-6.5-1.5-8-4c1.5-2.5 5-4 8-4s6.5 1.5 8 4"/></svg>
+              </button>
+              <button class="row-action" onclick="openRemoveFor('${deviceId}'); event.stopPropagation();" title="Xóa" style="color:#dc2626;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              </button>
+            </td>
+          </tr>`;
+      }).filter(r => r);
+
+      deviceList.innerHTML = rows.length ? rows.join('') : `<tr><td colspan="3"><div class="table-empty"><p>Không tìm thấy thiết bị phù hợp với bộ lọc</p></div></td></tr>`;
+    }
+    function handleChartHover(e, deviceId, points) {
+      const container = e.currentTarget;
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+
+      const width = rect.width;
+      const step = width / 23;
+      let index = Math.round(x / step);
+      if (index < 0) index = 0;
+      if (index > 23) index = 23;
+
+      const snapX = index * step;
+      const val = points[index];
+
+      const hs = String(index).padStart(2, '0');
+      const timeStr = `${hs}:00`;
+
+      const safeId = deviceId.replace(/:/g, '');
+      const tooltip = document.getElementById(`tooltip-${safeId}`);
+      const line = document.getElementById(`hover-line-${safeId}`);
+      if (!tooltip || !line) return;
+
+      tooltip.style.opacity = '1';
+      tooltip.style.left = `${snapX}px`;
+      tooltip.innerHTML = `${val} <span>W</span> <div style="font-size:0.65rem;font-weight:400;color:#94a3b8;margin-top:2px;">${timeStr}</div>`;
+
+      line.style.opacity = '1';
+      line.style.left = `${snapX}px`;
+    }
+
+    function hideChartHover(deviceId) {
+      const safeId = deviceId.replace(/:/g, '');
+      const tooltip = document.getElementById(`tooltip-${safeId}`);
+      const line = document.getElementById(`hover-line-${safeId}`);
+      if (tooltip) tooltip.style.opacity = '0';
+      if (line) line.style.opacity = '0';
+    }
+
+
+
+
+    function addLog(msg, type = 'info') {
+      if (!logConsole) return;
+      const t = new Date().toLocaleTimeString('en-GB');
+      const line = document.createElement('div');
+      line.className = `log-line ${type}`;
+      line.innerHTML = `<span style="opacity:0.6; margin-right:8px;">[${t}]</span> ${msg}`;
+      logConsole.appendChild(line);
+      logConsole.scrollTop = logConsole.scrollHeight;
+      if (logConsole.children.length > 50) logConsole.removeChild(logConsole.firstChild);
+    }
+
+    /* ── Modals ── */
+    function openModal(id) {
+      const el = document.getElementById(id);
+      el.style.display = 'flex';
+      if (id === 'modal-add') {
+        document.getElementById('add-mac').value = drafts.add.mac;
+        document.getElementById('add-name').value = drafts.add.name;
+      }
+      if (id === 'modal-remove') {
+        document.getElementById('rm-mac').value = drafts.remove.mac;
+        document.getElementById('rm-name').value = drafts.remove.name;
+      }
+    }
+
+    function closeModal(id) {
+      if (id === 'modal-add') {
+        drafts.add.mac = document.getElementById('add-mac').value;
+        drafts.add.name = document.getElementById('add-name').value;
+      }
+      if (id === 'modal-remove') {
+        drafts.remove.mac = document.getElementById('rm-mac').value;
+        drafts.remove.name = document.getElementById('rm-name').value;
+      }
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function openRemoveFor(mac) {
+      const dev = devices[mac];
+      const meta = dev ? (dev.meta || {}) : {};
+      const name = meta.name || (meta.id != null ? `Thiết bị ${meta.id}` : mac);
+      document.getElementById('rm-mac').value = mac;
+      document.getElementById('rm-name').value = name;
+      drafts.remove.mac = mac;
+      drafts.remove.name = name;
+      openModal('modal-remove');
+    }
+
+    function selectDevice(deviceId) {
+      selectedDeviceId = deviceId;
+      openDetailFor(deviceId);
+      render();
+    }
+
+    function openDetailFor(deviceId) {
+      const dev = devices[deviceId];
+      if (!dev) return;
+      const meta = dev.meta || {};
+      const lastAt = dev.updatedAt || Date.now();
+      const label = meta.name || (meta.id != null ? `Thiết bị ${meta.id}` : deviceId);
+      const statusText = meta.status === 1 ? 'Hoạt động' : 'Tắt';
+
+      const sample = getDeviceEnergySample(deviceId);
+      const chart = buildEnergyPath(sample.points, 640, 180);
+      const pointsJson = JSON.stringify(sample.points.map(p => Math.round(p)));
+      const safeId = deviceId.replace(/:/g, '');
+
+      const detailBody = document.getElementById('detail-body');
+      if (!detailBody) return;
+      detailBody.innerHTML = `
+        <div class="detail-panel" style="margin-bottom: 12px;">
+          <div class="detail-grid">
+            <div><span>Tên</span><strong>${label}</strong></div>
+            <div><span>MAC</span><strong>${deviceId}</strong></div>
+            <div><span>Vị trí</span><strong>${dev.currentRoom || '—'}</strong></div>
+            <div><span>Trạng thái</span><strong>${statusText}</strong></div>
+            <div><span>Thời gian cập nhật</span><strong>${formatTimeOnly(lastAt)}</strong></div>
+            <div><span>Ngày cập nhật</span><strong>${formatDateOnly(lastAt)}</strong></div>
+          </div>
+        </div>
+        <div class="energy-modal-card" style="margin-bottom: 12px; padding: 10px 16px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+          <div class="energy-modal-label" style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: none;">Công suất tiêu thụ</div>
+          <div class="energy-modal-value" style="font-size: 1.25rem; font-weight: 700; color: #2563eb;">
+            <span>${sample.watt}</span>
+            <span class="energy-modal-unit" style="font-size: 0.9rem; color: #64748b; margin-left: 4px;">W</span>
+          </div>
+        </div>
+        <div class="energy-modal-chart">
+          <div class="energy-modal-chart-head" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #1e293b;">
+            <div>Tiêu thụ điện năng 24h</div>
+            <div class="energy-modal-unit-text" style="font-size: 0.75rem; color: #64748b;">Đơn vị: W</div>
+          </div>
+          <div class="energy-modal-chart-wrap" style="position: relative; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; background: #f8fafc;" onmousemove="handleChartHover(event, '${deviceId}', ${pointsJson})" onmouseleave="hideChartHover('${deviceId}')">
+            <div id="hover-line-${safeId}" class="en-chart-hover-line" style="opacity: 0; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: rgba(37,99,235,0.4); pointer-events: none; z-index: 10;"></div>
+            <div id="tooltip-${safeId}" class="en-tooltip" style="opacity: 0; position: absolute; left: 0; top: 10px; transform: translateX(-50%); background: #1e293b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; pointer-events: none; z-index: 20; white-space: nowrap;"></div>
+            <svg viewBox="0 0 640 140" class="energy-modal-svg" preserveAspectRatio="none" style="width: 100%; height: 140px; display: block; border-bottom: 1px solid #e2e8f0;">
+              <defs>
+                <linearGradient id="energyFill-${safeId}" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#2563eb" stop-opacity="0.25" />
+                  <stop offset="100%" stop-color="#2563eb" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <path d="${chart.area}" fill="url(#energyFill-${safeId})" />
+              <path d="${chart.line}" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <div class="en-axis" style="display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: #64748b; padding: 0 8px 6px 8px;">
+              <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span>
+            </div>
+          </div>
+        </div>`;
+      openModal('modal-detail');
+    }
+
+
+
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', e => {
+        if (e.target === overlay) overlay.style.display = 'none';
+      });
+    });
+
+    /* ── API Actions ── */
+    async function publishWhitelist() {
+      try {
+        const res = await fetch("/api/publish-whitelist", { method: "POST" });
+        const j = await res.json();
+        if (j.ok) {
+          addLog("Đã yêu cầu đồng bộ Whitelist cho toàn mạng Gateway", "success");
+        }
+      } catch (err) { showNotification(`Lỗi: ${err}`, 'error'); }
+    }
+
+    async function rebootGateway(id) {
+      if (!confirm(`Bạn có chắc chắn muốn khởi động lại Gateway "${id}"?`)) return;
+      try {
+        const res = await fetch("/api/gw/reboot", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ gw: id })
+        });
+        const j = await res.json();
+        if (j.ok) addLog(`Đã gửi lệnh Reboot tới ${id}`, "info");
+      } catch (err) { showNotification(`Lỗi: ${err}`, 'error'); }
+    }
+
+    function openGwConfig(id) {
+      const gw = gateways[id];
+      if (!gw) return;
+      document.getElementById('config-gw-id').value = id;
+      document.getElementById('config-scan-interval').value = gw.scanInterval || 100;
+      document.getElementById('config-scan-window').value = gw.scanWindow || 50;
+      openModal('modal-gw-config');
+    }
+
+    async function saveGwConfig() {
+      const id = document.getElementById('config-gw-id').value;
+      const interval = document.getElementById('config-scan-interval').value;
+      const window = document.getElementById('config-scan-window').value;
+
+      try {
+        const res = await fetch("/api/gw/config", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ gw: id, interval: parseInt(interval), window: parseInt(window) })
+        });
+        const j = await res.json();
+        if (j.ok) {
+          addLog(`Đã cập nhật cấu hình quét cho ${id}`, "success");
+          closeModal('modal-gw-config');
+        }
+      } catch (err) { showNotification(`Lỗi: ${err}`, 'error'); }
+    }
+
+    async function addDevice() {
+      const mac = document.getElementById('add-mac').value.trim().toUpperCase();
+      const name = document.getElementById('add-name').value.trim();
+      if (!mac) return showNotification('Vui lòng nhập MAC Address.', 'warning');
+      try {
+        const res = await fetch("/api/add", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mac, name, id: "" })
+        });
+        const j = await res.json();
+        if (j.ok) {
+          showNotification(`Đã thêm thiết bị: ${name || mac}`, 'success');
+          document.getElementById('add-mac').value = '';
+          document.getElementById('add-name').value = '';
+          drafts.add.mac = ""; drafts.add.name = "";
+          closeModal('modal-add');
+
+          if (!devices[mac]) {
+            devices[mac] = { currentRoom: null, rooms: {}, updatedAt: Date.now(), meta: { name: name || '' } };
+          } else {
+            devices[mac].meta.name = name || devices[mac].meta.name;
+          }
+          render();
+          renderDevices();
+          if (typeof updateSysStats === 'function') updateSysStats();
+          if (typeof updatePlaybackList === 'function') updatePlaybackList();
+        } else {
+          showNotification(`Thêm thất bại: ${j.error || 'Unknown'}`, 'error');
+        }
+      } catch (err) { showNotification(`Lỗi: ${err}`, 'error'); }
+    }
+
+    async function removeDevice() {
+      const mac = document.getElementById('rm-mac').value.trim().toUpperCase();
+      const name = document.getElementById('rm-name').value.trim();
+      if (!mac) return showNotification('Vui lòng nhập MAC.', 'warning');
+      if (!confirm(`Xoá thiết bị ${name || 'không tên'} (MAC ${mac}) khỏi hệ thống?`)) return;
+      const res = await fetch("/api/remove", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mac })
+      });
+      const j = await res.json();
+      if (j.ok) {
+        document.getElementById('rm-mac').value = '';
+        document.getElementById('rm-name').value = '';
+        drafts.remove.mac = "";
+        drafts.remove.name = "";
+        closeModal('modal-remove');
+        if (devices[mac]) {
+          delete devices[mac];
+          render();
+          renderDevices();
+          if (typeof updateSysStats === 'function') updateSysStats();
+          if (typeof updatePlaybackList === 'function') updatePlaybackList();
+        }
+      }
+    }
+
+    async function changePassword() {
+      const current = document.getElementById('pwd-current').value;
+      const newPwd = document.getElementById('pwd-new').value;
+      const confirm_ = document.getElementById('pwd-confirm').value;
+
+      if (!current || !newPwd || !confirm_) {
+        return showNotification('Vui lòng điền đầy đủ thông tin.', 'warning');
+      }
+      if (newPwd !== confirm_) {
+        return showNotification('Mật khẩu mới không khớp.', 'warning');
+      }
+      if (newPwd.length < 6) {
+        return showNotification('Mật khẩu phải có ít nhất 6 ký tự.', 'warning');
+      }
+
+      const username = sessionStorage.getItem("ble_user") || "admin";
+      try {
+        const res = await fetch("/api/users/change-password", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, oldPassword: current, newPassword: newPwd })
+        });
+        const j = await res.json();
+        if (j.ok) {
+          showNotification('Đổi mật khẩu thành công!', 'success');
+          document.getElementById('pwd-current').value = '';
+          document.getElementById('pwd-new').value = '';
+          document.getElementById('pwd-confirm').value = '';
+          closeModal('modal-change-password');
+        } else {
+          showNotification(`Lỗi: ${j.error}`, 'error');
+        }
+      } catch (err) { showNotification(`Lỗi kết nối: ${err.message}`, 'error'); }
+    }
+
+    async function changePin() {
+      const pinNew = document.getElementById('pin-new').value;
+      const pinConfirm = document.getElementById('pin-confirm').value;
+
+      if (!pinNew || !pinConfirm) {
+        return showNotification('Vui lòng điền đầy đủ thông tin.', 'warning');
+      }
+      if (pinNew !== pinConfirm) {
+        return showNotification('PIN không khớp.', 'warning');
+      }
+      if (!/^\d{4,6}$/.test(pinNew)) {
+        return showNotification('PIN phải là 4-6 chữ số.', 'warning');
+      }
+
+      const username = sessionStorage.getItem("ble_user") || "admin";
+      try {
+        const res = await fetch("/api/users/change-pin", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, newPin: pinNew })
+        });
+        const j = await res.json();
+        if (j.ok) {
+          showNotification('Cập nhật PIN thành công!', 'success');
+          document.getElementById('pin-new').value = '';
+          document.getElementById('pin-confirm').value = '';
+          closeModal('modal-change-pin');
+        } else {
+          showNotification(`Lỗi: ${j.error}`, 'error');
+        }
+      } catch (err) { showNotification(`Lỗi kết nối: ${err.message}`, 'error'); }
+    }
+
+    async function pushOTA() {
+      const fileInput = document.getElementById('ota-file');
+      if (fileInput.files.length === 0) {
+        return showNotification('Vui lòng chọn file .bin để cập nhật.', 'warning');
+      }
+      const file = fileInput.files[0];
+      const fileName = file.name;
+      const progressDiv = document.getElementById('ota-progress');
+      const bar = document.getElementById('ota-bar');
+      const percent = document.getElementById('ota-percent');
+
+      if (!confirm(`Xác nhận cập nhật Firmware ${fileName} cho toàn bộ Gateway?`)) return;
+
+      progressDiv.style.display = 'block';
+      let p = 0;
+
+      const formData = new FormData();
+      formData.append('firmware', file);
+
+      try {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/ota", true);
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            p = Math.floor((e.loaded / e.total) * 100);
+            bar.style.width = `${p}%`;
+            percent.innerText = `${p}%`;
+          }
+        };
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            const j = JSON.parse(xhr.responseText);
+            if (j.ok) {
+              showNotification(`Cập nhật thành công Firmware ${fileName}`, 'success');
+              progressDiv.style.display = 'none';
+              bar.style.width = '0%';
+              fileInput.value = '';
+            } else {
+              showNotification('Lỗi: ' + j.error, 'error');
+              progressDiv.style.display = 'none';
+            }
+          } else {
+            showNotification(`Lỗi HTTP ${xhr.status} khi tải lên Firmware!`, 'error');
+            progressDiv.style.display = 'none';
+          }
+        };
+        xhr.onerror = () => {
+          showNotification("Lỗi mạng khi upload firmware", 'error');
+          progressDiv.style.display = 'none';
+        }
+        xhr.send(formData);
+      } catch (err) {
+        showNotification("Lỗi upload: " + err.message, 'error');
+        progressDiv.style.display = 'none';
+      }
+    }
+
+    let allUsersData = [];
+
+    async function fetchUsers() {
+      try {
+        const res = await fetch("/api/users");
+        const j = await res.json();
+        if (j.ok && j.users) {
+          allUsersData = j.users;
+          renderUserTable(allUsersData);
+
+          let roleStats = { admin: 0, manager: 0, viewer: 0 };
+          j.users.forEach(u => {
+            let roleStr = (u.role || 'viewer').toLowerCase();
+            if (roleStats[roleStr] !== undefined) roleStats[roleStr]++;
+            else roleStats[roleStr] = 1;
+          });
+          const total = j.users.length || 1;
+          const roleHtml = `
+            <div style="display:flex; align-items:center; gap:0.8rem;">
+              <div style="width:8px; height:8px; border-radius:50%; background:#dc2626;"></div>
+              <div style="flex:1;">
+                <div style="font-size:0.85rem; font-weight:600;">Admin</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">${roleStats.admin} người</div>
+              </div>
+              <div style="font-size:0.9rem; font-weight:700; color:#dc2626;">${Math.round(roleStats.admin / total * 100)}%</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.8rem;">
+              <div style="width:8px; height:8px; border-radius:50%; background:#059669;"></div>
+              <div style="flex:1;">
+                <div style="font-size:0.85rem; font-weight:600;">Manager</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">${roleStats.manager} người</div>
+              </div>
+              <div style="font-size:0.9rem; font-weight:700; color:#059669;">${Math.round(roleStats.manager / total * 100)}%</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.8rem;">
+              <div style="width:8px; height:8px; border-radius:50%; background:#3b82f6;"></div>
+              <div style="flex:1;">
+                <div style="font-size:0.85rem; font-weight:600;">User</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">${roleStats.user || 0} người</div>
+              </div>
+              <div style="font-size:0.9rem; font-weight:700; color:#3b82f6;">${Math.round((roleStats.user || 0) / total * 100)}%</div>
+            </div>`;
+
+          const sidebarRoleContainer = document.querySelector('.users-grid-sidebar .sys-section-card:nth-child(1) > div:nth-child(2)');
+          if (sidebarRoleContainer) sidebarRoleContainer.innerHTML = roleHtml;
+
+          const onlineStat = document.getElementById('sys-sidebar-online');
+          const offlineStat = document.getElementById('sys-sidebar-offline');
+          if (onlineStat) onlineStat.innerText = j.users.filter(u => u.status === 'online').length;
+          if (offlineStat) offlineStat.innerText = j.users.filter(u => u.status !== 'online').length;
+
+        }
+      } catch (err) {
+        console.error("fetchUsers err", err);
+      }
+    }
+
+    function renderUserTable(users) {
+      const tbody = document.getElementById('sys-user-tbody');
+      const totalCount = document.getElementById('total-users-count');
+      if (totalCount) totalCount.textContent = users.length;
+      if (!tbody) return;
+      if (users.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem; color:var(--text-muted);">Không tìm thấy tài khoản nào</td></tr>`;
+        return;
+      }
+
+      const rows = users.map((u, i) => {
+        const ava = u.username.slice(0, 2).toUpperCase();
+        const badge = u.status === 'online'
+          ? '<span style="display: inline-flex; padding: 4px 10px; background: #ecfdf5; color: #10b981; border-radius: 9999px; font-size: 0.75rem; font-weight: 500;">Hoạt động</span>'
+          : '<span style="display: inline-flex; padding: 4px 10px; background: #f1f5f9; color: #64748b; border-radius: 9999px; font-size: 0.75rem; font-weight: 500;">Ngoại tuyến</span>';
+        const hideDel = u.username === 'admin' ? 'display:none;' : '';
+        const fullName = u.fullName || u.fullname || '-';
+        const email = u.email || '-';
+        const phone = u.phone || '-';
+
+        return `
+          <tr style="border-bottom: 1px solid #f1f5f9; transition: none;">
+            <td style="padding: 12px 8px; text-align: center; color: #475569; vertical-align: middle;">${i + 1}</td>
+            <td style="padding: 12px 8px; color: #475569; vertical-align: middle;">${u.username}</td>
+            <td style="padding: 12px 8px; color: #475569; vertical-align: middle;">${fullName}</td>
+            <td style="padding: 12px 8px; color: #475569; vertical-align: middle;">${email}</td>
+            <td style="padding: 12px 8px; color: #475569; vertical-align: middle;">${phone}</td>
+            <td style="padding: 12px 8px; color: #475569; vertical-align: middle;">${u.role.toUpperCase()} - ${u.role === 'admin' ? 'Quản trị viên' : (u.role === 'manager' ? 'Quản lý' : 'Người dùng')}</td>
+            <td style="padding: 12px 8px; text-align: center; vertical-align: middle;">
+              ${badge}
+            </td>
+            <td style="padding: 12px 8px; text-align: right; vertical-align: middle;">
+              <div style="display: flex; justify-content: flex-end; gap: 6px;">
+                <button title="Chỉnh sửa" onclick="editUser('${u.username}')" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: #eab308; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                </button>
+                <button title="Xóa" onclick="deleteUser('${u.username}')" style="${hideDel}; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = rows.join("");
+    }
+
+    function filterUserTable() {
+      const usernameQ = document.getElementById('filter-usr-username').value.toLowerCase();
+      const fullnameQ = document.getElementById('filter-usr-fullname').value.toLowerCase();
+      const statusQ = document.getElementById('filter-usr-status').value;
+
+      const filtered = allUsersData.filter(u => {
+        const uName = (u.username || '').toLowerCase();
+        const fName = (u.fullName || u.fullname || '').toLowerCase();
+
+        const matchUser = uName.includes(usernameQ);
+        const matchFull = fName.includes(fullnameQ);
+        const matchStat = (statusQ === 'all' || u.status === statusQ);
+
+        return matchUser && matchFull && matchStat;
+      });
+
+      renderUserTable(filtered);
+    }
+
+    function resetUserFilter() {
+      document.getElementById('filter-usr-username').value = '';
+      document.getElementById('filter-usr-fullname').value = '';
+      document.getElementById('filter-usr-status').value = 'all';
+      renderUserTable(allUsersData);
+    }
+
+    async function deleteUser(username) {
+      // Mở modal để nhập PIN
+      document.getElementById('delete-user-name').value = username;
+      document.getElementById('delete-user-pin').value = '';
+      openModal('modal-delete-user');
+      // Focus vào input PIN
+      setTimeout(() => {
+        document.getElementById('delete-user-pin').focus();
+      }, 300);
+    }
+
+    let userToDelete = ''; // Biến lưu tên user đang chờ xóa
+
+    async function confirmDeleteUserWithPin() {
+      const userToDeleteName = document.getElementById('delete-user-name').value;
+      const pin = document.getElementById('delete-user-pin').value.trim();
+
+      if (!pin) {
+        showNotification('Vui lòng nhập mã PIN', 'warning');
+        return;
+      }
+
+      if (pin.length < 4) {
+        showNotification('Mã PIN phải có ít nhất 4 ký tự', 'warning');
+        return;
+      }
+
+      try {
+        const currentUser = sessionStorage.getItem('ble_user') || 'admin';
+        const res = await fetch("/api/users/" + userToDeleteName, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pin, requestUser: currentUser })
+        });
+
+        const j = await res.json();
+
+        if (j.ok) {
+          showNotification('Xóa người dùng thành công', 'success');
+          closeModal('modal-delete-user');
+          fetchUsers();
+        } else {
+          showNotification('Lỗi: ' + (j.error || 'Không thể xóa người dùng'), 'error');
+          document.getElementById('delete-user-pin').value = '';
+          document.getElementById('delete-user-pin').focus();
+        }
+      } catch (e) {
+        showNotification('Lỗi: ' + e.message, 'error');
+      }
+    }
+
+    function openAddUser() {
+      document.getElementById('modal-add-user-title').textContent = 'Thêm người dùng mới';
+      document.getElementById('btn-submit-user').textContent = 'Tạo người dùng';
+      document.getElementById('user-new-username').value = '';
+      document.getElementById('user-new-username').disabled = false;
+      document.getElementById('user-new-password').value = '';
+      document.getElementById('user-new-fullname').value = '';
+      document.getElementById('user-new-email').value = '';
+      document.getElementById('user-new-phone').value = '';
+      document.getElementById('user-new-role').value = 'user';
+      document.getElementById('user-edit-mode').value = 'false';
+      openModal('modal-add-user');
+    }
+
+    function editUser(username) {
+      const user = allUsersData.find(u => u.username === username);
+      if (!user) return;
+      document.getElementById('modal-add-user-title').textContent = 'Chỉnh sửa người dùng';
+      document.getElementById('btn-submit-user').textContent = 'Lưu thay đổi';
+      document.getElementById('user-new-username').value = user.username;
+      document.getElementById('user-new-username').disabled = true;
+      document.getElementById('user-new-password').value = ''; // leave empty unless changing
+      document.getElementById('user-new-fullname').value = user.fullName || user.fullname || '';
+      document.getElementById('user-new-email').value = user.email || '';
+      document.getElementById('user-new-phone').value = user.phone || '';
+      document.getElementById('user-new-role').value = user.role;
+      document.getElementById('user-edit-mode').value = 'true';
+      openModal('modal-add-user');
+    }
+
+    async function submitUser() {
+      const isEdit = document.getElementById('user-edit-mode').value === 'true';
+      const username = document.getElementById('user-new-username').value.trim().toLowerCase();
+      const password = document.getElementById('user-new-password').value;
+      const fullName = document.getElementById('user-new-fullname').value.trim();
+      const email = document.getElementById('user-new-email').value.trim();
+      const phone = document.getElementById('user-new-phone').value.trim();
+      const role = document.getElementById('user-new-role').value;
+
+      if (!username) return showNotification('Nhập username', 'warning');
+      if (!isEdit && !password) return showNotification('Nhập mật khẩu', 'warning');
+
+      const payload = { username, role, fullName, email, phone };
+      if (password) payload.password = password;
+
+      try {
+        const res = await fetch("/api/users" + (isEdit ? `/${username}` : ""), {
+          method: isEdit ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const j = await res.json();
+        if (j.ok || res.ok) {
+          showNotification(isEdit ? 'Cập nhật thành công' : 'Tạo người dùng thành công', 'success');
+          closeModal('modal-add-user');
+          fetchUsers();
+        } else {
+          showNotification('Lỗi: ' + (j.error || j.message || 'Không thể lưu'), 'error');
+        }
+      } catch (e) { showNotification(e.message, 'error'); }
+    }
+
+    /* ── Reports Functions ── */
+    function loadReportHistory() {
+      try {
+        const raw = localStorage.getItem(REPORT_HISTORY_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        reportHistory = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        reportHistory = [];
+      }
+    }
+
+    function saveReportHistory() {
+      try {
+        localStorage.setItem(REPORT_HISTORY_KEY, JSON.stringify(reportHistory));
+      } catch { }
+    }
+
+    function recordReportEvent(deviceId, payload) {
+      if (!deviceId || !payload) return;
+      const ts = Number(payload.updatedAt) || Date.now();
+      const meta = payload.meta || {};
+      const status = Number.isFinite(meta.status) ? Number(meta.status) : null;
+      const alert = Number.isFinite(meta.alert) ? Number(meta.alert) : null;
+      const power = Number.isFinite(meta.power) ? Number(meta.power) : null;
+      const room = payload.currentRoom || '';
+      const name = meta.name || '';
+
+      const prev = reportHistory[reportHistory.length - 1];
+      if (
+        prev &&
+        prev.deviceId === deviceId &&
+        prev.ts === ts &&
+        prev.room === room &&
+        prev.status === status &&
+        prev.alert === alert
+      ) {
+        return;
+      }
+
+      reportHistory.push({
+        ts,
+        deviceId,
+        name,
+        room,
+        status,
+        alert,
+        power,
+      });
+
+      if (reportHistory.length > REPORT_HISTORY_LIMIT) {
+        reportHistory = reportHistory.slice(reportHistory.length - REPORT_HISTORY_LIMIT);
+      }
+
+      saveReportHistory();
+    }
+
+    function seedReportHistoryFromCurrentState() {
+      Object.keys(devices).forEach((deviceId) => {
+        const d = devices[deviceId];
+        if (!d) return;
+        recordReportEvent(deviceId, {
+          currentRoom: d.currentRoom,
+          updatedAt: d.updatedAt || Date.now(),
+          meta: d.meta || {},
+        });
+      });
+    }
+
+    function toCsvValue(v) {
+      const text = v == null ? '' : String(v);
+      if (/[",\n]/.test(text)) return `"${text.replace(/"/g, '""')}"`;
+      return text;
+    }
+
+    function downloadTextFile(filename, content, mime = 'text/plain;charset=utf-8;') {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function exportCsv(filename, headers, rows) {
+      const lines = [headers.map(toCsvValue).join(',')];
+      rows.forEach(r => lines.push(r.map(toCsvValue).join(',')));
+      const csv = `\uFEFF${lines.join('\n')}`;
+      downloadTextFile(filename, csv, 'text/csv;charset=utf-8;');
+    }
+
+    function exportHtmlTableForPrint(title, headers, rows) {
+      const tableHeader = headers.map(h => `<th style="padding:8px;border:1px solid #d1d5db;text-align:left;">${h}</th>`).join('');
+      const tableRows = rows.map(r => `<tr>${r.map(c => `<td style="padding:8px;border:1px solid #e5e7eb;">${c == null ? '' : c}</td>`).join('')}</tr>`).join('');
+      const html = `<!doctype html><html><head><meta charset="utf-8"><title>${title}</title></head><body onload="window.print()" style="font-family:Arial,sans-serif;padding:20px;"><h2 style="margin:0 0 12px;">${title}</h2><table style="border-collapse:collapse;width:100%;font-size:13px;"><thead><tr>${tableHeader}</tr></thead><tbody>${tableRows || '<tr><td colspan="99" style="padding:10px;border:1px solid #e5e7eb;">Không có dữ liệu</td></tr>'}</tbody></table></body></html>`;
+      const popup = window.open('', '_blank');
+      if (!popup) {
+        showNotification('Trình duyệt chặn popup in PDF. Hãy cho phép popup.', 'warning');
+        return;
+      }
+      popup.document.write(html);
+      popup.document.close();
+    }
+
+    function getMonthRange(monthValue) {
+      const now = new Date();
+      const v = monthValue || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      const [y, m] = v.split('-').map(Number);
+      const from = new Date(y, m - 1, 1, 0, 0, 0, 0).getTime();
+      const to = new Date(y, m, 0, 23, 59, 59, 999).getTime();
+      return { from, to, label: v };
+    }
+
+    function getDateRangeFromInput(fromStr, toStr) {
+      if (!fromStr || !toStr) return null;
+      const from = new Date(`${fromStr}T00:00:00`).getTime();
+      const to = new Date(`${toStr}T23:59:59.999`).getTime();
+      if (!Number.isFinite(from) || !Number.isFinite(to) || from > to) return null;
+      return { from, to };
+
+    }
+
+    function historyInRange(from, to) {
+      return reportHistory
+        .filter(r => r.ts >= from && r.ts <= to)
+        .sort((a, b) => a.ts - b.ts);
+    }
+
+    function formatDateTimeVN(ts) {
+      return new Date(ts).toLocaleString('vi-VN', {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+    }
+
+    function buildIncidentRows(monthValue) {
+      const range = getMonthRange(monthValue);
+      const rows = historyInRange(range.from, range.to)
+        .filter(r => r.status !== 1 || r.alert === 1 || !r.room)
+        .map(r => [
+          formatDateTimeVN(r.ts),
+          r.name || r.deviceId,
+          r.deviceId,
+          r.room || 'Không xác định',
+          r.status === 1 ? 'Online' : 'Offline',
+          r.alert === 1 ? 'Có' : 'Không',
+        ]);
+      return { rows, label: range.label };
+    }
+
+    function buildPerformanceRows(dayRange) {
+      const days = Number(dayRange) || 7;
+      const from = Date.now() - (days * 24 * 60 * 60 * 1000);
+      const data = historyInRange(from, Date.now());
+      const grouped = {};
+
+      data.forEach(r => {
+        if (!grouped[r.deviceId]) {
+          grouped[r.deviceId] = {
+            name: r.name || r.deviceId,
+            total: 0,
+            online: 0,
+            lastSeen: r.ts,
+            lastRoom: r.room || 'Không xác định',
+          };
+        }
+        const g = grouped[r.deviceId];
+        g.total += 1;
+        if (r.status === 1) g.online += 1;
+        if (r.ts > g.lastSeen) {
+          g.lastSeen = r.ts;
+          g.lastRoom = r.room || 'Không xác định';
+          if (r.name) g.name = r.name;
+        }
+      });
+
+      const rows = Object.keys(grouped).map(deviceId => {
+        const g = grouped[deviceId];
+        const uptime = g.total > 0 ? ((g.online / g.total) * 100) : 0;
+        return [
+          g.name,
+          deviceId,
+          `${uptime.toFixed(1)}%`,
+          String(g.online),
+          String(g.total - g.online),
+          g.lastRoom,
+          formatDateTimeVN(g.lastSeen),
+        ];
+      }).sort((a, b) => parseFloat(a[2]) - parseFloat(b[2]));
+
+      return { rows, days };
+    }
+
+    function buildRawRows(fromStr, toStr) {
+      const range = getDateRangeFromInput(fromStr, toStr);
+      if (!range) return { error: 'Vui lòng chọn khoảng thời gian hợp lệ.' };
+
+      const rows = historyInRange(range.from, range.to).map(r => [
+        formatDateTimeVN(r.ts),
+        r.name || r.deviceId,
+        r.deviceId,
+        r.room || 'Không xác định',
+        r.status === 1 ? 'Online' : (r.status == null ? 'N/A' : 'Offline'),
+        r.power == null ? '' : r.power,
+        r.alert === 1 ? '1' : '0',
+      ]);
+
+      return { rows, from: fromStr, to: toStr };
+    }
+
+    function exportReport(type, format) {
+      if (!reportHistory.length) {
+        showNotification('Chưa có dữ liệu lịch sử để xuất báo cáo.', 'warning');
+        return;
+      }
+
+      if (type === 'incident') {
+        const monthValue = document.getElementById('incident-month')?.value;
+        const { rows, label } = buildIncidentRows(monthValue);
+        const headers = ['Thời gian', 'Tên thiết bị', 'MAC/ID', 'Vị trí', 'Trạng thái', 'Cảnh báo'];
+        if (format === 'pdf') {
+          exportHtmlTableForPrint(`Báo cáo sự cố (${label})`, headers, rows);
+        } else {
+          exportCsv(`Báo cáo sự cố (${label}).csv`, headers, rows);
+        }
+        showNotification(`Đã tạo báo cáo sự cố (${rows.length} dòng).`, 'success');
+        return;
+      }
+
+      if (type === 'performance') {
+        const dayRange = document.getElementById('uptime-range')?.value || '7';
+        const { rows, days } = buildPerformanceRows(dayRange);
+        const headers = ['Tên thiết bị', 'MAC/ID', 'Uptime', 'Mẫu Online', 'Mẫu Offline', 'Vị trí gần nhất', 'Cập nhật gần nhất'];
+        exportCsv(`Báo cáo hiệu suất_${days}_ngay.csv`, headers, rows);
+        showNotification(`Đã tạo báo cáo hiệu suất ${days} ngày (${rows.length} thiết bị).`, 'success');
+        return;
+      }
+
+      if (type === 'raw') {
+        const fromStr = document.getElementById('raw-date-from')?.value;
+        const toStr = document.getElementById('raw-date-to')?.value;
+        const result = buildRawRows(fromStr, toStr);
+        if (result.error) {
+          showNotification(result.error, 'warning');
+          return;
+        }
+        const headers = ['Thời gian', 'Tên thiết bị', 'MAC/ID', 'Vị trí', 'Trạng thái', 'Power', 'Alert'];
+        exportCsv(`du_lieu_tho_${result.from}_${result.to}.csv`, headers, result.rows);
+        showNotification(`Đã xuất dữ liệu thô (${result.rows.length} dòng).`, 'success');
+      }
+    }
+
+    function startPlayback() {
+      const mac = document.getElementById('playback-mac').value;
+      const date = document.getElementById('playback-date').value;
+      if (!mac || !date) return showNotification('Vui lòng chọn thiết bị và ngày.', 'warning');
+
+      const area = document.getElementById('playback-area');
+      const dayRange = getDateRangeFromInput(date, date);
+      if (!dayRange) return showNotification('Ngày playback không hợp lệ.', 'warning');
+
+      const rows = historyInRange(dayRange.from, dayRange.to).filter(r => r.deviceId === mac);
+      if (!rows.length) {
+        area.innerHTML = `<div class="rpt-playback-empty"><span>Không có dữ liệu hành trình cho thiết bị trong ngày đã chọn.</span></div>`;
+        showNotification('Không có dữ liệu hành trình cho lựa chọn này.', 'warning');
+        return;
+      }
+
+      const transitions = [];
+      rows.forEach((r) => {
+        const room = r.room || 'Không xác định';
+        const last = transitions[transitions.length - 1];
+        if (!last || last.room !== room) {
+          transitions.push({ room, ts: r.ts });
+        }
+      });
+
+      area.innerHTML = `
+        <div style="width:100%; padding: 1rem 1.2rem; display:flex; flex-direction:column; height:100%;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.7rem; font-size:0.78rem; color:#64748b;">
+            <span>Tổng điểm dừng: <strong style="color:#0f172a;">${transitions.length}</strong></span>
+            <span>${new Date(dayRange.from).toLocaleDateString('vi-VN')}</span>
+          </div>
+          <div style="position:relative; height:8px; background:#e2e8f0; border-radius:999px; margin-bottom:1rem; overflow:hidden;">
+            <div id="playback-progress" style="position:absolute; left:0; top:0; bottom:0; width:0%; background:linear-gradient(90deg,#2563eb,#1d4ed8);"></div>
+          </div>
+          <div class="playback-scroll">
+            <div id="playback-steps" style="display:grid; gap:0.45rem; padding: 0.75rem;"></div>
+          </div>
+        </div>`;
+
+      const stepRoot = document.getElementById('playback-steps');
+      const progress = document.getElementById('playback-progress');
+      if (!stepRoot || !progress) return;
+
+      stepRoot.innerHTML = transitions.map((t, idx) => `
+        <div data-step="${idx}" style="display:flex; justify-content:space-between; align-items:center; border:1px solid #e2e8f0; border-radius:8px; padding:7px 10px; font-size:0.78rem; background:#fff; color:#334155;">
+          <span>${idx + 1}. ${t.room}</span>
+          <span style="color:#64748b;">${new Date(t.ts).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+        </div>
+      `).join('');
+
+      let idx = 0;
+      const total = transitions.length;
+      const timer = setInterval(() => {
+        const percent = Math.min(100, ((idx + 1) / total) * 100);
+        progress.style.width = `${percent}%`;
+        const item = stepRoot.querySelector(`[data-step="${idx}"]`);
+        if (item) {
+          item.style.borderColor = '#93c5fd';
+          item.style.background = '#eff6ff';
+        }
+        idx += 1;
+        if (idx >= total) {
+          clearInterval(timer);
+          showNotification('Playback hoàn tất.', 'success', 2000);
+        }
+      }, 500);
+    }
+
+    function updatePlaybackList() {
+      const select = document.getElementById('playback-mac');
+      if (!select) return;
+      const current = select.value;
+      select.innerHTML = '<option value="">Chọn thiết bị...</option>';
+      Object.keys(devices).forEach(mac => {
+        const name = devices[mac].meta?.name || mac;
+        const opt = document.createElement('option');
+        opt.value = mac;
+        opt.textContent = name;
+        select.appendChild(opt);
+      });
+      select.value = current;
+    }
+
+    /* ── Review & Reports Sub-Menu Switching ── */
+    function switchRptMenu(tabName) {
+      document.querySelectorAll('.rpt-tab-content').forEach(c => {
+        c.style.display = 'none';
+        c.classList.remove('active');
+      });
+      const el = document.getElementById(`rpt-tab-${tabName}`);
+      if (el) {
+        el.style.display = 'block';
+        el.classList.add('active');
+      }
+
+      document.querySelectorAll('.rpt-menu-btn').forEach(btn => {
+        if (btn.dataset.target === tabName) {
+          btn.classList.add('active');
+          const topbarTitle = document.getElementById('topbar-title');
+          const topbarBreadcrumb = document.getElementById('topbar-breadcrumb');
+          if (topbarTitle) {
+            topbarTitle.textContent = btn.innerText.trim();
+          }
+          if (topbarBreadcrumb) {
+            if (tabName === 'export') {
+              topbarBreadcrumb.textContent = 'Trích xuất dữ liệu trong hệ thống';
+            } else if (tabName === 'tracking') {
+              topbarBreadcrumb.textContent = 'Truy vết và xem lại hành trình của thiết bị';
+            }
+          }
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    /* ── Navigation Group Toggle ── */
+    function toggleNavGroup(btn) {
+      const submenu = btn.nextElementSibling;
+      const chevron = btn.querySelector('.nav-chevron');
+      if (submenu.style.display === 'none' || !submenu.style.display) {
+        submenu.style.display = 'flex';
+        chevron.style.transform = 'rotate(180deg)';
+      } else {
+        submenu.style.display = 'none';
+        chevron.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    /* ── System Sub-Menu Switching ── */
+    function switchSysMenu(tabName) {
+      document.querySelectorAll('.sys-tab-content').forEach(c => c.classList.remove('active'));
+      const el = document.getElementById(`sys-tab-${tabName}`);
+      if (el) el.classList.add('active');
+
+      document.querySelectorAll('.sys-menu-btn').forEach(btn => {
+        if (btn.dataset.target === tabName) {
+          btn.classList.add('active');
+          const topbarTitle = document.getElementById('topbar-title');
+          const topbarBreadcrumb = document.getElementById('topbar-breadcrumb');
+          if (topbarTitle) {
+            topbarTitle.textContent = btn.innerText.trim();
+          }
+          if (topbarBreadcrumb) {
+            if (tabName === 'account') {
+              topbarBreadcrumb.textContent = 'Quản lý thông tin cá nhân và bảo mật';
+            } else if (tabName === 'users') {
+              topbarBreadcrumb.textContent = 'Quản lý phân quyền và danh sách tài khoản';
+            } else if (tabName === 'logs') {
+              topbarBreadcrumb.textContent = 'Theo dõi các hoạt động và sự kiện hệ thống';
+            }
+          }
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      const sysTabs = document.querySelector('.sys-tabs');
+      if (sysTabs) sysTabs.style.display = 'none';
+
+      if (tabName === 'users') {
+        if (typeof fetchUsers === 'function') fetchUsers();
+      }
+    }
+
+    /* ── System Tab Switching (Legacy) ── */
+    function switchSysTab(tabName, btn) {
+      document.querySelectorAll('.sys-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.sys-tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const el = document.getElementById(`sys-tab-${tabName}`);
+      if (el) el.classList.add('active');
+
+      if (tabName === 'users') {
+        if (typeof fetchUsers === 'function') fetchUsers();
+      }
+    }
+
+    /* ── Sync system stats into sysinfo tab ── */
+    function updateSysStats() {
+      const ids = Object.keys(devices);
+      const online = ids.filter(id => devices[id].meta?.status === 1).length;
+      const offline = ids.length - online;
+      const gwCount = Object.keys(gateways).length;
+      const elTotal = document.getElementById('sys-stat-total');
+      const elOnline = document.getElementById('sys-stat-online');
+      const elOffline = document.getElementById('sys-stat-offline');
+      const elGw = document.getElementById('sys-stat-gw');
+      if (elTotal) elTotal.textContent = ids.length;
+      if (elOnline) elOnline.textContent = online;
+      if (elOffline) elOffline.textContent = offline;
+      if (elGw) elGw.textContent = gwCount;
+    }
+
+    /* ── Sync profile info from API ── */
+    async function syncProfileDisplay() {
+      const user = sessionStorage.getItem('ble_user') || 'admin';
+      const ava = user.slice(0, 2).toUpperCase();
+
+      const els = {
+        'sys-avatar-display': ava,
+        'account-username': user,
+        'account-role-display': user
+      };
+
+      for (let k in els) {
+        let el = document.getElementById(k);
+        if (el) el.textContent = els[k];
+      }
+
+      try {
+        const res = await fetch("/api/users");
+        const j = await res.json();
+        if (j.ok && j.users) {
+          const logUser = j.users.find(u => u.username === user);
+          if (logUser) {
+            const roleCap = logUser.role.charAt(0).toUpperCase() + logUser.role.slice(1);
+            const lastAt = logUser.lastLogin ? new Date(logUser.lastLogin).toLocaleString('vi-VN') : '—';
+
+            document.getElementById('sys-profile-name').textContent = logUser.username;
+            document.getElementById('sys-session-time').textContent = lastAt;
+            document.getElementById('sys-session-time-2').textContent = lastAt;
+            document.getElementById('account-role').textContent = roleCap;
+            document.getElementById('account-role-badge').textContent = roleCap;
+
+            const elRoleTag = document.getElementById('sys-profile-role-tag');
+            if (elRoleTag) {
+              elRoleTag.className = `role-tag role-${logUser.role}`;
+              elRoleTag.textContent = roleCap;
+            }
+
+            const elActList = document.getElementById('sys-activity-list');
+            if (elActList) {
+              if (!logUser.activities || logUser.activities.length === 0) {
+                elActList.innerHTML = `<div style="padding:1.5rem; text-align:center; color:var(--text-faint); grid-column:1/-1;">Chưa có hoạt động nào</div>`;
+              } else {
+                const latest = logUser.activities.reduce((acc, act) => {
+                  if (!acc) return act;
+                  const accTs = acc.ts ? new Date(acc.ts).getTime() : 0;
+                  const actTs = act.ts ? new Date(act.ts).getTime() : 0;
+                  return actTs > accTs ? act : acc;
+                }, null);
+
+                if (!latest) {
+                  elActList.innerHTML = `<div style="padding:1.5rem; text-align:center; color:var(--text-faint); grid-column:1/-1;">Chưa có hoạt động nào</div>`;
+                } else {
+                  const t = new Date(latest.ts);
+                  const isToday = t.toDateString() === new Date().toDateString();
+                  const timeStr = isToday
+                    ? `Hôm nay, ${t.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}`
+                    : t.toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'numeric', year: 'numeric' });
+                  elActList.innerHTML = `<div style="padding:0.6rem; background:#f3f4f6; border-radius:6px; font-size:0.8rem;">
+                       <div style="color:var(--text-muted); margin-bottom:2px;">${timeStr}</div>
+                       <div style="color:var(--text-main); font-weight:500;">${latest.msg}</div>
+                     </div>`;
+                }
+              }
+            }
+          }
+        }
+      } catch (err) { console.error(err); }
+
+      // Load saved profile extras from localStorage
+      const prof = JSON.parse(localStorage.getItem('acc_profile_' + (sessionStorage.getItem('ble_user') || 'admin')) || '{}');
+      if (prof.displayName) {
+        const dn = document.getElementById('acc-display-name-view');
+        if (dn) dn.textContent = prof.displayName;
+        const pn = document.getElementById('sys-profile-name');
+        if (pn) pn.textContent = prof.displayName;
+      }
+      if (prof.email) {
+        const ev = document.getElementById('acc-email-view'); if (ev) ev.textContent = prof.email;
+        const em = document.getElementById('acc-meta-email'); if (em) em.textContent = prof.email;
+        const er = document.getElementById('acc-meta-email-row'); if (er) er.style.display = '';
+      }
+      if (prof.phone) {
+        const pv = document.getElementById('acc-phone-view'); if (pv) pv.textContent = prof.phone;
+        const pm = document.getElementById('acc-meta-phone'); if (pm) pm.textContent = prof.phone;
+        const pr = document.getElementById('acc-meta-phone-row'); if (pr) pr.style.display = '';
+      }
+      // Pre-fill edit form
+      const editDn = document.getElementById('acc-edit-displayname'); if (editDn) editDn.value = prof.displayName || '';
+      const editEm = document.getElementById('acc-edit-email'); if (editEm) editEm.value = prof.email || '';
+      const editPh = document.getElementById('acc-edit-phone'); if (editPh) editPh.value = prof.phone || '';
+      const editDp = document.getElementById('acc-edit-department'); if (editDp) editDp.value = prof.department || '';
+    }
+
+    /* ── Session Stats (timer + browser + IP) ── */
+    function initSessionStats() {
+      // Session duration timer
+      const loginTs = parseInt(sessionStorage.getItem('ble_login_ts') || '0');
+      if (!loginTs) sessionStorage.setItem('ble_login_ts', Date.now().toString());
+      const start = parseInt(sessionStorage.getItem('ble_login_ts') || Date.now().toString());
+
+      function formatDuration(ms) {
+        const s = Math.floor(ms / 1000);
+        const m = Math.floor(s / 60);
+        const h = Math.floor(m / 60);
+        if (h > 0) return `${h}g ${m % 60}p`;
+        if (m > 0) return `${m}p ${s % 60}s`;
+        return `${s}s`;
+      }
+
+      function tick() {
+        const el = document.getElementById('acc-stat-duration');
+        if (el) el.textContent = formatDuration(Date.now() - start);
+      }
+      tick();
+      setInterval(tick, 1000);
+
+      // Browser detection
+      const ua = navigator.userAgent;
+      let browser = 'Khác';
+      if (/Edg\//.test(ua)) browser = 'Edge';
+      else if (/OPR\//.test(ua)) browser = 'Opera';
+      else if (/Firefox\//.test(ua)) browser = 'Firefox';
+      else if (/Chrome\//.test(ua)) browser = 'Chrome';
+      else if (/Safari\//.test(ua)) browser = 'Safari';
+      const bEl = document.getElementById('acc-stat-browser');
+      if (bEl) bEl.textContent = browser;
+
+      // Login count today (stored in sessionStorage)
+      const todayKey = 'acc_login_count_' + new Date().toDateString();
+      let cnt = parseInt(sessionStorage.getItem(todayKey) || '0');
+      if (!sessionStorage.getItem(todayKey + '_set')) {
+        cnt = (cnt || 0) + 1;
+        sessionStorage.setItem(todayKey, cnt);
+        sessionStorage.setItem(todayKey + '_set', '1');
+      }
+      const lcEl = document.getElementById('acc-stat-logincount');
+      if (lcEl) lcEl.textContent = cnt || 1;
+
+      // IP address
+      fetch('https://api.ipify.org?format=json')
+        .then(r => r.json())
+        .then(d => { const ip = document.getElementById('acc-stat-ip'); if (ip) ip.textContent = d.ip || '—'; })
+        .catch(() => { const ip = document.getElementById('acc-stat-ip'); if (ip) ip.textContent = '127.0.0.1'; });
+    }
+
+    /* ── Save Profile ── */
+    function saveProfile() {
+      const user = sessionStorage.getItem('ble_user') || 'admin';
+      const displayName = (document.getElementById('acc-edit-displayname')?.value || '').trim();
+      const email = (document.getElementById('acc-edit-email')?.value || '').trim();
+      const phone = (document.getElementById('acc-edit-phone')?.value || '').trim();
+      const department = (document.getElementById('acc-edit-department')?.value || '').trim();
+
+      const prof = { displayName, email, phone, department };
+      localStorage.setItem('acc_profile_' + user, JSON.stringify(prof));
+
+      // Update display views
+      const dn = document.getElementById('acc-display-name-view'); if (dn) dn.textContent = displayName || '—';
+      const pn = document.getElementById('sys-profile-name'); if (pn && displayName) pn.textContent = displayName;
+      const ev = document.getElementById('acc-email-view'); if (ev) ev.textContent = email || '—';
+      const pv = document.getElementById('acc-phone-view'); if (pv) pv.textContent = phone || '—';
+
+      // Avatar card meta rows
+      if (email) {
+        const em = document.getElementById('acc-meta-email'); if (em) em.textContent = email;
+        const er = document.getElementById('acc-meta-email-row'); if (er) er.style.display = '';
+      }
+      if (phone) {
+        const pm = document.getElementById('acc-meta-phone'); if (pm) pm.textContent = phone;
+        const pr = document.getElementById('acc-meta-phone-row'); if (pr) pr.style.display = '';
+      }
+
+      // Show saved badge
+      const badge = document.getElementById('acc-edit-saved-badge');
+      if (badge) {
+        badge.style.display = 'inline-flex';
+        setTimeout(() => { badge.style.display = 'none'; }, 3000);
+      }
+
+      if (typeof showNotification === 'function') showNotification('Đã lưu thông tin hồ sơ thành công!', 'success');
+    }
+
+    /* ── Reset Profile Form ── */
+    function resetProfileForm() {
+      const user = sessionStorage.getItem('ble_user') || 'admin';
+      const prof = JSON.parse(localStorage.getItem('acc_profile_' + user) || '{}');
+      const editDn = document.getElementById('acc-edit-displayname'); if (editDn) editDn.value = prof.displayName || '';
+      const editEm = document.getElementById('acc-edit-email'); if (editEm) editEm.value = prof.email || '';
+      const editPh = document.getElementById('acc-edit-phone'); if (editPh) editPh.value = prof.phone || '';
+      const editDp = document.getElementById('acc-edit-department'); if (editDp) editDp.value = prof.department || '';
+    }
+
+    /* ── Toggle 2FA ── */
+    function toggle2FA(checkbox) {
+      const msg = checkbox.checked
+        ? 'Xác thực 2 lớp đã được bật. (Tính năng sẽ được tích hợp đầy đủ trong bản cập nhật tiếp theo.)'
+        : 'Xác thực 2 lớp đã tắt.';
+      if (typeof showNotification === 'function') showNotification(msg, checkbox.checked ? 'success' : 'info');
+    }
+
+    async function syncFirmwareInfo() {
+      try {
+        const res = await fetch('/api/ota/version');
+        const j = await res.json();
+        if (j.ok) {
+          const v = j.version;
+          const els = ['fw-cur-ver', 'fw-new-ver', 'sys-ver-master'];
+          els.forEach(id => {
+            if (document.getElementById(id)) document.getElementById(id).textContent = v;
+          });
+        }
+      } catch (err) { }
+    }
+    async function logout() {
+      if (!confirm("Bạn có chắc chắn muốn đăng xuất không?")) return;
+      const user = sessionStorage.getItem('ble_user') || 'admin';
+      try {
+        await fetch(`/api/users/${user}/activity`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ msg: 'Đăng xuất' })
+        });
+      } catch (e) { }
+      sessionStorage.removeItem('ble_user');
+      sessionStorage.removeItem('ble_auth');
+      sessionStorage.removeItem('logged_in_recorded');
+      location.reload();
+    }
+
+    async function loadState() {
+      const user = sessionStorage.getItem('ble_user') || 'admin';
+      if (!sessionStorage.getItem('logged_in_recorded')) {
+        try {
+          await fetch(`/api/users/${user}/activity`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ msg: 'Đăng nhập thành công', setOnline: true })
+          });
+          sessionStorage.setItem('logged_in_recorded', 'true');
+        } catch (e) { }
+      }
+
+      try {
+        const r = await fetch("/state?_=" + Date.now(), { cache: 'no-store' });
+        const j = await r.json();
+        applyStateSnapshot(j, { recordAll: true });
+        if (typeof fetchUsers === 'function') fetchUsers();
+        syncProfileDisplay();
+        syncFirmwareInfo();
+        setConnected(true);
+      } catch (err) {
+        console.error("Failed to load state", err);
+        setConnected(false);
+      }
+    }
+
+    function applyStateSnapshot(snapshot, options = {}) {
+      const recordAll = !!options.recordAll;
+      const nextDevices = snapshot?.devices || {};
+      const nextGateways = snapshot?.gateways || {};
+      const prevDevices = devices;
+
+      devices = nextDevices;
+      gateways = nextGateways;
+
+      if (recordAll) {
+        seedReportHistoryFromCurrentState();
+      } else {
+        Object.keys(devices).forEach((deviceId) => {
+          const cur = devices[deviceId] || {};
+          const prev = prevDevices[deviceId] || null;
+          const curUpdatedAt = Number(cur.updatedAt) || 0;
+          const prevUpdatedAt = Number(prev?.updatedAt) || 0;
+          const curRoom = cur.currentRoom || '';
+          const prevRoom = prev?.currentRoom || '';
+          const curStatus = Number(cur?.meta?.status ?? -1);
+          const prevStatus = Number(prev?.meta?.status ?? -1);
+
+          const hasMeaningfulChange = !prev
+            || curUpdatedAt !== prevUpdatedAt
+            || curRoom !== prevRoom
+            || curStatus !== prevStatus;
+
+          if (hasMeaningfulChange) {
+            recordReportEvent(deviceId, {
+              currentRoom: cur.currentRoom,
+              updatedAt: cur.updatedAt,
+              meta: cur.meta || {},
+            });
+          }
+        });
+      }
+
+      render();
+      renderGateways();
+      renderDevices();
+      updatePlaybackList();
+      updateSysStats();
+      updateAppSheetFromDevices();
+    }
+
+    async function pollStateFallback() {
+      if (statePollInFlight) return;
+      statePollInFlight = true;
+      try {
+        const res = await fetch('/state?_=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        const snapshot = await res.json();
+        applyStateSnapshot(snapshot, { recordAll: false });
+
+        if (connBadge.classList.contains('disconnected')) {
+          setConnected(true);
+        }
+      } catch (err) {
+        console.warn('Fallback polling /state thất bại:', err);
+      } finally {
+        statePollInFlight = false;
+      }
+    }
+
+    searchInput?.addEventListener('input', render);
+    statusFilter?.addEventListener('change', render);
+    roomFilter?.addEventListener('change', render);
+
+    devSearchInput?.addEventListener('input', renderDevices);
+    devStatusFilter?.addEventListener('change', renderDevices);
+    devRoomFilter?.addEventListener('change', renderDevices);
+
+    setInterval(() => { render(); renderDevices(); }, 5000);
+
+    // ── SSE realtime connection ──
+    let _sseErrorCount = 0;
+    let _sseReconnectTimer = null;
+
+    function connectSSE() {
+      if (_sseReconnectTimer) { clearTimeout(_sseReconnectTimer); _sseReconnectTimer = null; }
+
+      const es = new EventSource("/events");
+
+      es.onopen = () => {
+        _sseErrorCount = 0;
+        setConnected(true);
+      };
+
+      es.onerror = () => {
+        _sseErrorCount++;
+        setConnected(false);
+        es.close();
+        // Backoff: 1s, 2s, 4s, 8s, max 15s
+        const delay = Math.min(1000 * Math.pow(2, _sseErrorCount - 1), 15000);
+        _sseReconnectTimer = setTimeout(connectSSE, delay);
+      };
+
+      es.onmessage = ev => {
+        let msg;
+        try { msg = JSON.parse(ev.data); } catch { return; }
+
+        if (msg.type === "hello") { setConnected(true); }
+
+        // Snapshot: apply full state immediately on (re)connect
+        if (msg.type === "snapshot") {
+          applyStateSnapshot({ devices: msg.devices || {}, gateways: msg.gateways || {} }, { recordAll: false });
+          setConnected(true);
+          return;
+        }
+
+        if (msg.type === "users_updated") {
+          if (typeof fetchUsers === 'function') fetchUsers();
+          if (typeof syncProfileDisplay === 'function') syncProfileDisplay();
+        }
+        if (msg.type === "gateway_update") {
+          gateways[msg.gateway.id] = msg.gateway;
+          renderGateways();
+          updateSysStats();
+          if (noiseStats) noiseStats.innerText = `Thiết bị lạ quét được: ${msg.gateway.noise || 0}`;
+          addLog(`Dữ liệu từ Gateway "${msg.gateway.id}" (Total: ${msg.gateway.totalDevices}, Noise: ${msg.gateway.noise || 0})`, "info");
+          return;
+        }
+        if (msg.type === "update") {
+          devices[msg.deviceId] = {
+            currentRoom: msg.currentRoom,
+            rooms: msg.rooms,
+            updatedAt: msg.updatedAt,
+            meta: msg.meta,
+          };
+          if (updateAppSheetRowFromDevice(msg.deviceId, devices[msg.deviceId])) {
+            renderAppSheetData();
+          }
+          recordReportEvent(msg.deviceId, {
+            currentRoom: msg.currentRoom,
+            updatedAt: msg.updatedAt,
+            meta: msg.meta,
+          });
+          render();
+          renderDevices();
+          scheduleAppSheetRefresh(700);
+          updateSysStats();
+          updatePlaybackList();
+        }
+        if (msg.type === "delete") {
+          delete devices[msg.deviceId];
+          render();
+          renderDevices();
+          scheduleAppSheetRefresh(700);
+          updateSysStats();
+          updatePlaybackList();
+        }
+        if (msg.type === "mgmt_response") {
+          const seq = msg.data?.seq != null ? String(msg.data.seq) : "";
+          const key = `${msg.action || ""}-${seq}`;
+          const now = Date.now();
+          if (key && key === lastMgmtKey && now - lastMgmtAt < 2000) return;
+          lastMgmtKey = key; lastMgmtAt = now;
+          const notificationType = msg.data.status === 1 ? 'success' : 'error';
+          const notificationMessage = msg.data.status === 1 ? `${msg.action} thành công!` : `${msg.action} thất bại!`;
+          showNotification(notificationMessage, notificationType);
+        }
+      };
+    }
+
+    connectSSE();
+
+    /** ĐỒNG BỘ APPSHEET **/
+    const APPSHEET_STORAGE_KEY = 'appsheet_devices_cache_v1';
+    const APPSHEET_AUTO_REFRESH_MIN_MS = 2000;
+    let appsheetDevices = []; // Dữ liệu cache để tìm kiếm
+    let appsheetRefreshTimer = null;
+    let appsheetRefreshing = false;
+    let appsheetLastSyncAt = 0;
+    loadAppSheetCache();
+
+    function getAppSheetRowMac(row) {
+      const keys = ['MAC', 'mac', 'MAC_Address', 'Mac', 'mac_address'];
+      for (const k of keys) {
+        if (row && row[k]) return String(row[k]).trim().toUpperCase();
+      }
+      return '';
+    }
+
+    function setAppSheetField(row, candidates, value) {
+      if (!row) return;
+      for (const k of candidates) {
+        if (Object.prototype.hasOwnProperty.call(row, k)) {
+          row[k] = value;
+          return;
+        }
+      }
+      row[candidates[0]] = value;
+    }
+
+    function updateAppSheetRowFromDevice(deviceId, dev) {
+      if (!Array.isArray(appsheetDevices) || !appsheetDevices.length) return false;
+      const wanted = String(deviceId || '').trim().toUpperCase();
+      if (!wanted) return false;
+      for (const row of appsheetDevices) {
+        const mac = getAppSheetRowMac(row);
+        if (!mac || mac !== wanted) continue;
+        const status = dev?.meta?.status === 1 ? 'Online' : 'Offline';
+        const room = dev?.currentRoom || '';
+        setAppSheetField(row, ['Trạng thái', 'Trang thái', 'Trang_Thai', 'status', 'Status'], status);
+        setAppSheetField(row, ['Vị trí', 'Vi tri', 'location', 'room', 'Vi_tri'], room);
+        return true;
+      }
+      return false;
+    }
+
+    function updateAppSheetFromDevices() {
+      if (!Array.isArray(appsheetDevices) || !appsheetDevices.length) return;
+      let changed = false;
+      for (const deviceId of Object.keys(devices)) {
+        if (updateAppSheetRowFromDevice(deviceId, devices[deviceId])) changed = true;
+      }
+      if (changed) renderAppSheetData();
+    }
+
+    function scheduleAppSheetRefresh(delayMs = 1000) {
+      if (appsheetRefreshTimer) clearTimeout(appsheetRefreshTimer);
+      appsheetRefreshTimer = setTimeout(() => {
+        demoAppSheetSync({ silent: true });
+      }, Math.max(0, Number(delayMs) || 0));
+    }
+
+    loadState();
+    // AppSheet auto refresh disabled; use manual reload button instead.
+    setInterval(pollStateFallback, STATE_POLL_INTERVAL_MS);
+    setTimeout(pollStateFallback, 1000);
+
+    function saveAppSheetCache(data) {
+      try {
+        localStorage.setItem(APPSHEET_STORAGE_KEY, JSON.stringify(data || []));
+      } catch (err) {
+        console.error('Không thể lưu cache AppSheet:', err);
+      }
+    }
+
+    function loadAppSheetCache() {
+      try {
+        const raw = localStorage.getItem(APPSHEET_STORAGE_KEY);
+        appsheetDevices = raw ? JSON.parse(raw) : [];
+      } catch (err) {
+        appsheetDevices = [];
+      }
+      renderAppSheetData();
+    }
+
+    function renderAppSheetData() {
+      const tbody = document.getElementById('device-list-tbody');
+      if (!tbody) return;
+
+      const searchBox = document.getElementById('appsheet-search');
+      let query = '';
+      if (searchBox) {
+        query = searchBox.value.trim().toLowerCase();
+      }
+
+      tbody.innerHTML = '';
+
+      const filtered = appsheetDevices.filter(dev => {
+        const name = (dev['Tên thiết bị'] || dev.Ten_Thiet_Bi || '').toLowerCase();
+        const mac = (dev['MAC'] || dev.MAC_Address || '').toLowerCase();
+        return name.includes(query) || mac.includes(query);
+      });
+
+      if (filtered.length === 0) {
+        const hasCache = appsheetDevices.length > 0;
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="3" class="appsheet-empty-cell">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+              </svg>
+              <p>${hasCache ? 'Không tìm thấy thiết bị nào khớp với từ khóa' : 'Chưa có dữ liệu AppSheet. Nhấn "Tải lại" để đồng bộ thiết bị.'}</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      filtered.forEach((dev, index) => {
+        const tr = document.createElement('tr');
+        tr.className = 'appsheet-row';
+
+        const trangThai = dev['Trạng thái'] || dev['Trang thái'] || dev.Trang_Thai || 'Chưa rõ';
+        const isOnline = trangThai.toLowerCase() === 'online';
+        const statusClass = isOnline ? 'appsheet-status online' : 'appsheet-status offline';
+        const deviceName = dev['Tên thiết bị'] || dev.Ten_Thiet_Bi || 'Thiết bị';
+        const mac = dev['MAC'] || dev.MAC_Address || 'N/A';
+
+        tr.innerHTML = `
+          <td class="appsheet-name-cell">
+            <div class="appsheet-device-name">${deviceName}</div>
+            ${dev.Vai_tro ? `<div class="appsheet-device-role">Vai trò: ${dev.Vai_tro}</div>` : ''}
+          </td>
+          <td>
+            <code class="appsheet-mac-code">${mac}</code>
+          </td>
+          <td class="appsheet-status-cell">
+            <span class="${statusClass}">
+              <span class="dot"></span>
+              ${trangThai}
+            </span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function demoAppSheetSync(options = {}) {
+      const silent = !!options.silent;
+      const now = Date.now();
+      if (appsheetRefreshing) return;
+      if (silent && (now - appsheetLastSyncAt) < APPSHEET_AUTO_REFRESH_MIN_MS) return;
+
+      const btn = document.getElementById('btn-reload-appsheet');
+      const originBtnContent = btn ? btn.innerHTML : '';
+      if (!silent && btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>Đang tải...</span>';
+      }
+      appsheetRefreshing = true;
+
+      try {
+        const res = await fetch('/api/appsheet/devices', { cache: 'no-store' });
+        const rawText = await res.text();
+        let result = null;
+
+        try {
+          result = rawText ? JSON.parse(rawText) : {};
+        } catch (parseErr) {
+          throw new Error(`Response không phải JSON (HTTP ${res.status})`);
+        }
+
+        if (res.ok && result.ok && Array.isArray(result.data)) {
+          appsheetDevices = result.data;
+          appsheetLastSyncAt = Date.now();
+          saveAppSheetCache(appsheetDevices);
+          renderAppSheetData();
+          if (!silent) {
+            showNotification(`Đã cập nhật ${appsheetDevices.length} thiết bị từ AppSheet`, 'success', 2500);
+          }
+        } else {
+          const detail = result?.detail || result?.error || 'API trả dữ liệu không hợp lệ';
+          if (!silent) {
+            showNotification(`Đồng bộ thất bại (HTTP ${res.status}): ${detail}`, 'error', 6000);
+          } else {
+            console.warn(`Đồng bộ nền AppSheet thất bại (HTTP ${res.status}): ${detail}`);
+          }
+        }
+      } catch (err) {
+        console.error("Lỗi đồng bộ API AppSheet:", err);
+        if (!silent) {
+          showNotification(`Có lỗi khi kết nối đến Server: ${err.message}`, "error", 6000);
+        }
+      } finally {
+        appsheetRefreshing = false;
+        if (btn && !silent) {
+          btn.innerHTML = originBtnContent;
+          btn.disabled = false;
+        }
+      }
+    }
+
+    /** NOTIFICATION SYSTEM **/
+    function showNotification(message, type = 'info', duration = 4000) {
+      const container = document.getElementById('notification-container');
+      const notification = document.createElement('div');
+      notification.className = `notification notification-${type}`;
+
+      const icons = {
+        success: '✓',
+        error: '✕',
+        info: 'ℹ',
+        warning: '⚠'
+      };
+
+      notification.innerHTML = `
+        <div class="notification-icon">${icons[type] || icons.info}</div>
+        <div class="notification-message">${message}</div>
+        <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+      `;
+
+      container.appendChild(notification);
+
+      // Tự động xóa sau duration
+      if (duration > 0) {
+        setTimeout(() => {
+          notification.classList.add('notification-hide');
+          setTimeout(() => notification.remove(), 300);
+        }, duration);
+      }
+    }
+
+    // ====== ROLE MANAGEMENT FUNCTIONS ======
+    function openRoleModal(roleId) {
+      const isEdit = !!roleId;
+      const titleEl = document.getElementById('modal-role-title');
+      const nameInput = document.getElementById('role-name-input');
+      const badgeInput = document.getElementById('role-badge-input');
+      const descInput = document.getElementById('role-desc-input');
+
+      if (isEdit) {
+        titleEl.textContent = 'Chỉnh sửa vai trò: ' + roleId;
+        if (roleId === 'Admin') {
+          nameInput.value = 'Quản trị viên';
+          badgeInput.value = 'ADMIN';
+          descInput.value = 'Quyền hạn tối đa. Quản lý toàn bộ hệ thống, thiết bị và cấu hình hệ thống.';
+          document.getElementById('role-perm-map').checked = true;
+          document.getElementById('role-perm-report').checked = true;
+          document.getElementById('role-perm-account').checked = true;
+          document.getElementById('role-perm-config').checked = true;
+          document.getElementById('role-perm-logs').checked = true;
+        } else if (roleId === 'Manager') {
+          nameInput.value = 'Quản lý';
+          badgeInput.value = 'MANAGER';
+          descInput.value = 'Tập trung vào điều hành. Giám sát thiết bị, đọc nhật ký và phân tích báo cáo.';
+          document.getElementById('role-perm-map').checked = true;
+          document.getElementById('role-perm-report').checked = true;
+          document.getElementById('role-perm-account').checked = false;
+          document.getElementById('role-perm-config').checked = false;
+          document.getElementById('role-perm-logs').checked = true;
+        } else {
+          nameInput.value = 'Người dùng';
+          badgeInput.value = 'USER';
+          descInput.value = 'Sử dụng cơ bản. Chỉ theo dõi thiết bị hiện tại, không tiếp cận dữ liệu cấu hình.';
+          document.getElementById('role-perm-map').checked = true;
+          document.getElementById('role-perm-report').checked = false;
+          document.getElementById('role-perm-account').checked = false;
+          document.getElementById('role-perm-config').checked = false;
+          document.getElementById('role-perm-logs').checked = false;
+        }
+      } else {
+        titleEl.textContent = 'Thêm vai trò mới';
+        nameInput.value = '';
+        badgeInput.value = '';
+        descInput.value = '';
+        document.getElementById('role-perm-map').checked = false;
+        document.getElementById('role-perm-report').checked = false;
+        document.getElementById('role-perm-account').checked = false;
+        document.getElementById('role-perm-config').checked = false;
+        document.getElementById('role-perm-logs').checked = false;
+      }
+
+      openModal('modal-role-form');
+    }
+
+    function saveRoleForm() {
+      const name = document.getElementById('role-name-input').value.trim();
+      if (!name) {
+        showNotification('Vui lòng nhập tên vai trò!', 'warning');
+        return;
+      }
+      showNotification('Đã lưu cấu hình vai trò "' + name + '" thành công!', 'success');
+      closeModal('modal-role-form');
+    }
+
+    function openRoleDetailModal(roleId) {
+      document.getElementById('modal-role-detail-title').textContent = 'Chi tiết Vai trò: ' + roleId;
+
+      const tbody = document.getElementById('role-user-list-tbody');
+      tbody.innerHTML = '';
+
+      const fakeUsers = [
+        { username: 'admin', fullname: 'Nguyễn Văn A', lastActive: 'Vừa xong' },
+        { username: 'manager1', fullname: 'Trần Thị B', lastActive: '5 phút trước' },
+        { username: 'manager2', fullname: 'Lê Văn C', lastActive: '2 giờ trước' },
+        { username: 'user1', fullname: 'Phạm Thị D', lastActive: '1 ngày trước' },
+        { username: 'user2', fullname: 'Hoàng Văn E', lastActive: '1 tuần trước' }
+      ];
+
+      const selectedUsers = roleId === 'Admin' ? [fakeUsers[0]]
+        : roleId === 'Manager' ? [fakeUsers[1], fakeUsers[2]]
+          : [fakeUsers[3], fakeUsers[4]];
+
+      document.getElementById('role-user-count').textContent = selectedUsers.length;
+
+      selectedUsers.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid #e2e8f0';
+        tr.innerHTML = `
+          <td style="padding: 10px 12px; color: #0f172a; font-weight: 500;">${u.username}</td>
+          <td style="padding: 10px 12px; color: #475569;">${u.fullname}</td>
+          <td style="padding: 10px 12px; color: #64748b;">${u.lastActive}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      openModal('modal-role-detail');
+    }
+  </script>
+
+
+  <!-- Modal Role Form -->
+  <div id="modal-role-form" class="modal-overlay">
+    <div class="modal" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2 id="modal-role-title">Thêm vai trò mới</h2>
+        <button class="modal-close" type="button" onclick="closeModal('modal-role-form')">×</button>
+      </div>
+      <div class="modal-field">
+        <label>Tên vai trò <span style="color: #ef4444;">*</span></label>
+        <input type="text" id="role-name-input" class="modal-input" placeholder="VD: Kế toán, Nhân sự...">
+      </div>
+      <div class="modal-field">
+        <label>Mã vai trò (Badge) <span style="color: #ef4444;">*</span></label>
+        <input type="text" id="role-badge-input" class="modal-input" placeholder="VD: ACCOUNTANT, HR...">
+      </div>
+      <div class="modal-field">
+        <label>Mô tả chi tiết</label>
+        <textarea id="role-desc-input" class="modal-input" rows="3"
+          placeholder="Mô tả quyền hạn của vai trò này..."></textarea>
+      </div>
+      <div class="modal-field">
+        <label>Phân quyền tính năng</label>
+        <div
+          style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px; background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0;">
+          <label
+            style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 400; color: #1e293b;">
+            <input type="checkbox" id="role-perm-map" checked> Giám sát bản đồ trực tuyến
+          </label>
+          <label
+            style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 400; color: #1e293b;">
+            <input type="checkbox" id="role-perm-report"> Lịch sử & Báo cáo dữ liệu
+          </label>
+          <label
+            style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 400; color: #1e293b;">
+            <input type="checkbox" id="role-perm-account"> Quản lý tài khoản
+          </label>
+          <label
+            style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 400; color: #1e293b;">
+            <input type="checkbox" id="role-perm-config"> Cấu hình thiết bị
+          </label>
+          <label
+            style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 400; color: #1e293b;">
+            <input type="checkbox" id="role-perm-logs"> Xem nhật ký hoạt động (Logs)
+          </label>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-outline" onclick="closeModal('modal-role-form')">Hủy bỏ</button>
+        <button class="btn-primary" onclick="saveRoleForm()">Lưu thông tin</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Role Detail -->
+  <div id="modal-role-detail" class="modal-overlay">
+    <div class="modal" style="max-width: 600px;">
+      <div class="modal-header">
+        <h2 id="modal-role-detail-title">Chi tiết Vai trò</h2>
+        <button class="modal-close" type="button" onclick="closeModal('modal-role-detail')">×</button>
+      </div>
+      <div style="padding-bottom: 16px;">
+        <div style="display: flex; gap: 16px; margin-bottom: 20px;">
+          <div style="flex: 1; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 0.9rem; color: #64748b;">Tổng số người dùng</h3>
+            <div style="font-size: 1.8rem; font-weight: 700; color: #0f172a;" id="role-user-count">12</div>
+          </div>
+          <div style="flex: 1; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 0.9rem; color: #64748b;">Trạng thái</h3>
+            <div style="font-size: 1rem; font-weight: 600; color: #10b981; margin-top: 8px;">Đang hoạt động</div>
+          </div>
+        </div>
+
+        <h3 style="font-size: 1rem; color: #1e293b; margin-bottom: 12px;">Danh sách người dùng thuộc vai trò này:</h3>
+        <div style="border: 1px solid #e2e8f0; border-radius: 8px; max-height: 200px; overflow-y: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
+            <thead style="background: #f1f5f9; position: sticky; top: 0;">
+              <tr>
+                <th style="padding: 10px 12px; font-weight: 600; color: #475569; border-bottom: 1px solid #e2e8f0;">Tên
+                  đăng nhập</th>
+                <th style="padding: 10px 12px; font-weight: 600; color: #475569; border-bottom: 1px solid #e2e8f0;">Họ
+                  và tên</th>
+                <th style="padding: 10px 12px; font-weight: 600; color: #475569; border-bottom: 1px solid #e2e8f0;">Hoạt
+                  động cuối</th>
+              </tr>
+            </thead>
+            <tbody id="role-user-list-tbody">
+              <!-- JS injected -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-actions" style="margin-top: 0;">
+        <button class="btn-primary" onclick="closeModal('modal-role-detail')">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Container -->
+  <div id="notification-container"
+    style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; max-width: 400px; pointer-events: none;">
+  </div>
+
+</body>
+
+</html>

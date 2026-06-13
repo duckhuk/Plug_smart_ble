@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đăng nhập</title>
+  <link rel="icon" type="image/jpeg" href="assets/images/logo108.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --danger: #dc2626;
+      --text-main: #0f172a;
+      --text-sub: #334155;
+      --text-muted: #64748b;
+      --input-bg: #f1f5f9;
+      --font: 'Inter', sans-serif;
+      --radius-input: 12px;
+      --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .panel-left {
+      flex: 0 0 33.333%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #ffffff;
+      padding: 3rem 2.5rem;
+      position: relative;
+      z-index: 1;
+      box-shadow: 4px 0 32px rgba(15, 23, 42, 0.12);
+      animation: slideLeft 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes slideLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 380px;
+    }
+
+    /* Logo */
+    .login-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 2rem;
+      padding-bottom: 1.75rem;
+      border-bottom: 1.5px solid #f1f5f9;
+      text-align: center;
+    }
+
+    .login-logo-img {
+      width: 120px;
+      height: 135px;
+      object-fit: contain;
+      border-radius: 0;
+      flex-shrink: 0;
+    }
+
+    .login-title {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+    }
+
+    .login-title span {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 6px;
+      letter-spacing: 0.1px;
+    }
+
+    /* Heading */
+    .form-heading {
+      margin-bottom: 0.35rem;
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+
+    .form-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.6rem;
+      font-weight: 400;
+    }
+
+    /* Fields */
+    .form-field {
+      margin-bottom: 1.1rem;
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap>svg:first-of-type {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .form-field input {
+      width: 100%;
+      height: 50px;
+      padding: 0 1rem 0 2.75rem;
+      border-radius: var(--radius-input);
+      border: 1.5px solid #e2e8f0;
+      background: var(--input-bg);
+      color: var(--text-main);
+      font-family: var(--font);
+      font-size: 0.97rem;
+      position: relative;
+      z-index: 1;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    }
+
+    .form-field input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      background: #fff;
+    }
+
+    .form-field input::placeholder {
+      color: #a0aec0;
+    }
+
+    #password {
+      padding-right: 3rem;
+    }
+
+    /* Eye toggle */
+    .pwd-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      border-radius: 6px;
+      z-index: 3;
+      transition: color var(--transition), background var(--transition);
+    }
+
+    .pwd-toggle:hover {
+      color: var(--primary);
+      background: rgba(37, 99, 235, 0.07);
+    }
+
+    /* Error */
+    .error-msg {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: #fff5f5;
+      border: 1px solid #fed7d7;
+      color: var(--danger);
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      font-size: 0.87rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .error-msg.show {
+      display: flex;
+      animation: shake 0.38s ease;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-5px);
+      }
+
+      75% {
+        transform: translateX(5px);
+      }
+    }
+
+    .btn-login {
+      width: 100%;
+      height: 50px;
+      margin-top: 1.25rem;
+      border-radius: var(--radius-input);
+      border: none;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 60%, #1d4ed8 100%);
+      color: #fff;
+      font-family: var(--font);
+      font-size: 0.97rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .btn-login:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Spinner */
+    .spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .form-footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .panel-right {
+      flex: 0 0 66.667%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 3rem 5rem;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(155deg, rgba(10, 22, 40, 0.72) 0%, rgba(15, 39, 86, 0.65) 50%, rgba(10, 37, 64, 0.72) 100%),
+        url('assets/images/ble.jpg') center / cover no-repeat;
+      animation: slideRight 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes slideRight {
+      from {
+        opacity: 0;
+        transform: translateX(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Decorative blobs inside right panel */
+    .rp-blob {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(70px);
+      opacity: 0.35;
+    }
+
+    .rp-blob-1 {
+      width: 420px;
+      height: 420px;
+      top: -120px;
+      right: -100px;
+      background: radial-gradient(circle, rgba(245, 220, 140, 0.5), transparent 68%);
+      animation: blobFloat 22s ease-in-out infinite alternate;
+    }
+
+    .rp-blob-2 {
+      width: 340px;
+      height: 340px;
+      bottom: -100px;
+      left: -80px;
+      background: radial-gradient(circle, rgba(254, 243, 199, 0.35), transparent 65%);
+      animation: blobFloat 28s ease-in-out infinite alternate-reverse;
+    }
+
+    .rp-blob-3 {
+      width: 250px;
+      height: 250px;
+      top: 40%;
+      left: 5%;
+      background: radial-gradient(circle, rgba(14, 60, 120, 0.7), transparent 70%);
+      animation: blobFloat 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes blobFloat {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(10px, -14px) scale(1.05);
+      }
+
+      100% {
+        transform: translate(-8px, 16px) scale(0.96);
+      }
+    }
+
+
+    /* Particles background container */
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    /* SVG wave bottom decoration */
+    .rp-wave {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.18;
+    }
+
+    .rp-wave svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .rp-content {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+    }
+
+    /* Badge */
+    .rp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(245, 220, 140, 0.15);
+      border: 1px solid rgba(245, 220, 140, 0.35);
+      backdrop-filter: blur(10px);
+      color: #fde68a;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 0.4rem 0.9rem;
+      border-radius: 99px;
+      margin-bottom: 1.8rem;
+    }
+
+    .rp-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+      }
+    }
+
+    .rp-headline {
+      font-size: clamp(1.4rem, 2.2vw, 2.2rem);
+      font-weight: 800;
+      color: #f8f4e8;
+      line-height: 1.18;
+      letter-spacing: -1px;
+      margin-bottom: 1.1rem;
+      white-space: nowrap;
+    }
+
+    .rp-headline em {
+      font-style: normal;
+      background: linear-gradient(90deg, #fde68a, #fbbf24, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .rp-desc {
+      font-size: 1rem;
+      color: rgba(248, 237, 210, 0.8);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      font-weight: 400;
+    }
+
+    /* Feature cards */
+    .rp-features {
+      display: flex;
+      flex-direction: row;
+      gap: 1.25rem;
+      width: 100%;
+    }
+
+    .rp-feature {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      background: rgba(245, 220, 140, 0.08);
+      border: 1px solid rgba(245, 220, 140, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      padding: 1.75rem 1.25rem;
+      text-align: center;
+      transition: background var(--transition), transform var(--transition), border-color var(--transition);
+    }
+
+    .rp-feature:hover {
+      background: rgba(245, 220, 140, 0.16);
+      border-color: rgba(245, 220, 140, 0.4);
+      transform: translateY(-4px);
+    }
+
+    .rp-feat-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(253, 224, 71, 0.25), rgba(245, 158, 11, 0.2));
+      border: 1px solid rgba(253, 224, 71, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #fde68a;
+    }
+
+    .rp-feat-icon svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .rp-feat-text strong {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #f8f4e8;
+      margin-bottom: 4px;
+    }
+
+    .rp-feat-text span {
+      font-size: 0.85rem;
+      color: rgba(248, 237, 210, 0.6);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    /* Copyright bottom */
+    .rp-copy {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 0;
+      right: 0;
+      font-size: 0.75rem;
+      color: rgba(245, 220, 140, 0.35);
+      text-align: center;
+      z-index: 3;
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE – collapse to single column
+    ══════════════════════════════════════════ */
+    @media (max-width: 960px) {
+      body {
+        flex-direction: column;
+      }
+
+      .panel-left,
+      .panel-right {
+        flex: none;
+        width: 100%;
+      }
+
+      .panel-left {
+        padding: 2.5rem 1.75rem;
+        order: 2;
+        box-shadow: none;
+      }
+
+      .panel-right {
+        padding: 2.5rem 2rem;
+        min-height: 300px;
+        order: 1;
+      }
+
+      .rp-headline {
+        font-size: 2rem;
+      }
+
+      .rp-features {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ░░ LEFT – Login Form ░░ -->
+  <div class="panel-left">
+    <div class="form-container">
+
+      <!-- Logo -->
+      <div class="login-logo">
+        <img src="assets/images/logo108.jpg" alt="Logo" class="login-logo-img" />
+        <div class="login-title">
+          DEVICE BLE
+          <span>Hệ thống quản lý thiết bị</span>
+        </div>
+      </div>
+
+
+
+      <!-- Form -->
+      <form id="login-form" onsubmit="doLogin(event)" novalidate>
+
+        <div class="form-field">
+          <label for="username">Tài khoản</label>
+          <div class="input-wrap">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <input type="text" id="username" name="username" placeholder="Nhập tài khoản" autocomplete="username"
+              required />
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="password">Mật khẩu</label>
+          <div class="input-wrap">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <input type="password" id="password" name="password" placeholder="Nhập mật khẩu"
+              autocomplete="current-password" required />
+            <button type="button" class="pwd-toggle" id="pwd-toggle" onclick="togglePwd()" aria-label="Hiện mật khẩu">
+              <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="error-msg" id="error-msg">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <span id="error-text">Tên đăng nhập hoặc mật khẩu không đúng.</span>
+        </div>
+
+        <button type="submit" class="btn-login" id="btn-login">
+          <div class="spinner" id="spinner"></div>
+          <span id="btn-text">Đăng nhập</span>
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+
+  <div class="panel-right">
+    <div id="particles-js"></div>
+    <div class="rp-grid"></div>
+    <div class="rp-blob rp-blob-1"></div>
+    <div class="rp-blob rp-blob-2"></div>
+    <div class="rp-blob rp-blob-3"></div>
+    <div class="rp-wave">
+      <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,60 C240,120 480,0 720,60 C960,120 1200,0 1440,60 L1440,120 L0,120 Z" fill="#fde68a" />
+        <path d="M0,80 C360,20 720,110 1080,40 C1260,10 1380,80 1440,90 L1440,120 L0,120 Z" fill="#f59e0b"
+          opacity="0.4" />
+      </svg>
+    </div>
+
+    <div class="rp-content">
+      <!-- <div class="rp-badge">
+        <span class="rp-badge-dot"></span>
+        Hệ thống đang hoạt động
+      </div> -->
+
+      <h2 class="rp-headline">HỆ THỐNG QUẢN LÝ THIẾT BỊ</h2>
+
+      <p class="rp-desc">
+        Nền tảng giám sát và quản lý thiết bị theo thời gian thực.<br />
+        Theo dõi vị trí, trạng thái của thiết bị.
+      </p>
+
+      <div class="rp-features">
+
+        <div class="rp-feature">
+          <div class="rp-feat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 21s6-5.6 6-10a6 6 0 1 0-12 0c0 4.4 6 10 6 10z" />
+              <circle cx="12" cy="11" r="2.5" />
+            </svg>
+          </div>
+          <div class="rp-feat-text">
+            <strong>Giám sát vị trí</strong>
+            <span>Cập nhật vị trí liên tục</span>
+          </div>
+        </div>
+
+        <div class="rp-feature">
+          <div class="rp-feat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
+          </div>
+          <div class="rp-feat-text">
+            <strong>Lịch sử & báo cáo</strong>
+            <span>Phân tích và xuất dữ liệu</span>
+          </div>
+        </div>
+
+        <div class="rp-feature">
+          <div class="rp-feat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+            </svg>
+          </div>
+          <div class="rp-feat-text">
+            <strong>Trạng thái thiết bị</strong>
+            <span>Theo dõi hoạt động liên tục</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Particles.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    if (sessionStorage.getItem("ble_auth") === "1") {
+      location.replace("/");
+    }
+
+    function togglePwd() {
+      const input = document.getElementById("password");
+      const icon = document.getElementById("eye-icon");
+      const show = input.type === "password";
+      input.type = show ? "text" : "password";
+      icon.innerHTML = show
+        ? `<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`
+        : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+    }
+
+    function showError(msg) {
+      const el = document.getElementById("error-msg");
+      document.getElementById("error-text").textContent = msg;
+      el.classList.remove("show");
+      void el.offsetWidth;
+      el.classList.add("show");
+    }
+
+    function setLoading(on) {
+      document.getElementById("btn-login").disabled = on;
+      document.getElementById("spinner").style.display = on ? "block" : "none";
+      document.getElementById("btn-text").textContent = on ? "Đang xác thực…" : "Đăng nhập";
+    }
+
+    async function doLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (!username || !password) {
+        showError("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.");
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const res = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+        const j = await res.json();
+
+        if (j.ok) {
+          sessionStorage.setItem("ble_auth", "1");
+          sessionStorage.setItem("ble_user", j.user.username);
+          sessionStorage.setItem("ble_role", j.user.role || 'viewer');
+          sessionStorage.setItem("logged_in_recorded", "true"); // Skip dummy login request
+          location.replace("/");
+        } else {
+          setLoading(false);
+          showError(j.error || "Tên đăng nhập hoặc mật khẩu không đúng.");
+          document.getElementById("password").value = "";
+          document.getElementById("password").focus();
+        }
+      } catch (err) {
+        setLoading(false);
+        showError("Lỗi kết nối máy chủ quản lý.");
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("username").focus();
+
+      // Khởi tạo nền động particles.js
+      if (typeof particlesJS !== 'undefined') {
+        particlesJS("particles-js", {
+          "particles": {
+            "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+            "color": { "value": "#ffffff" },
+            "shape": { "type": "circle" },
+            "opacity": { "value": 0.5, "random": false },
+            "size": { "value": 3, "random": true },
+            "line_linked": {
+              "enable": true,
+              "distance": 150,
+              "color": "#ffffff",
+              "opacity": 0.4,
+              "width": 1
+            },
+            "move": {
+              "enable": true,
+              "speed": 2,
+              "direction": "none",
+              "random": false,
+              "straight": false,
+              "out_mode": "out",
+              "bounce": false,
+              "attract": { "enable": false }
+            }
+          },
+          "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+              "onhover": { "enable": true, "mode": "grab" },
+              "onclick": { "enable": true, "mode": "push" },
+              "resize": true
+            },
+            "modes": {
+              "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
+              "push": { "particles_nb": 4 }
+            }
+          },
+          "retina_detect": true
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>
