@@ -594,7 +594,7 @@ setInterval(() => {
   const now = Date.now();
   for (const deviceId in devices) {
     const dev = devices[deviceId];
-    if (dev.currentRoom && (now - dev.updatedAt > 8000)) {
+    if (dev.currentRoom && (now - dev.updatedAt > 10000)) {
       dev.currentRoom = null;
       dev.rooms = {};
       dev.lastSwitch = now;
