@@ -911,7 +911,17 @@ function getLocalIp() {
   return "localhost";
 }
 
+// Health check endpoint - dùng cho UptimeRobot để giữ server không sleep
+app.get("/health", (req, res) => {
+  res.json({
+    ok: true,
+    mqtt: mqttClient.connected,
+    uptime: Math.floor(process.uptime()),
+    ts: new Date().toISOString()
+  });
+});
+
 const PORT = Number(process.env.PORT || "3000");
 initDB().then(() => loadDeviceConfigs()).then(() => {
-  app.listen(PORT, "0.0.0.0", () => { console.log("SQLite Started on " + getLocalIp()); });
+  app.listen(PORT, "0.0.0.0", () => { console.log("Server started on port " + PORT); });
 });
