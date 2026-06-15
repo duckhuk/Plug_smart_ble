@@ -1553,7 +1553,7 @@
             </td>
             <td>${locationHTML}</td>
             <td>${statusHTML}</td>
-            <td><span class="time-ago">${formatDateOnly(d.updatedAt || Date.now())}</span></td>
+            <td><span class="time-ago">${formatDateOnly(d.updatedAt || Date.now())} - ${formatTimeOnly(d.updatedAt || Date.now())}</span></td>
             <td class="action-cell">
               <button class="row-action btn-view" type="button" title="Xem thông tin" aria-label="Xem thông tin"
                 onclick="selectDevice('${deviceId}'); event.stopPropagation();">
